@@ -5,11 +5,13 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web-Api", "Web-Api\Web-Api.csproj", "{C0BF8A06-111B-4F21-872A-E6CEF6658670}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{934DD6BE-33A0-40BB-A0EF-59DB181217B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{934DD6BE-33A0-40BB-A0EF-59DB181217B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{B37E2CB3-56F9-4CF5-AA04-F29E8BC409E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{B37E2CB3-56F9-4CF5-AA04-F29E8BC409E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{7E8E1AF1-D3E6-4C38-B6CE-F35DF69C1059}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{7E8E1AF1-D3E6-4C38-B6CE-F35DF69C1059}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Test", "Domain.Test\Domain.Test.csproj", "{471BF614-799A-4EE0-A4D3-01D68806FBE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{7E8E1AF1-D3E6-4C38-B6CE-F35DF69C1059}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E8E1AF1-D3E6-4C38-B6CE-F35DF69C1059}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E8E1AF1-D3E6-4C38-B6CE-F35DF69C1059}.Release|Any CPU.Build.0 = Release|Any CPU
+		{471BF614-799A-4EE0-A4D3-01D68806FBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{471BF614-799A-4EE0-A4D3-01D68806FBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{471BF614-799A-4EE0-A4D3-01D68806FBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{471BF614-799A-4EE0-A4D3-01D68806FBE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
