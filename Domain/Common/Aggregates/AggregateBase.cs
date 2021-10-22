@@ -5,7 +5,7 @@ namespace Domain.Common.Aggregates
 {
     public abstract class AggregateBase : IAggregate
     {
-        private readonly IList<IEvent> _uncommittedEvents;
+        private readonly ICollection<IEvent> _uncommittedEvents;
         private readonly IEventRouter _eventRouter;
         
         protected AggregateBase() : this(new ConventionalEventRouter()) { }
@@ -25,10 +25,20 @@ namespace Domain.Common.Aggregates
             _uncommittedEvents.Add(@event);
         }
 
-        private void Apply(IEvent @event)
+        public void Apply(IEvent @event)
         {
             _eventRouter.Dispatch(@event);
             Version++;
+        }
+
+        public ICollection<IEvent> GetUncommittedEvents()
+        {
+            return _uncommittedEvents;
+        }
+
+        public void ClearUncommittedEvents()
+        {
+            _uncommittedEvents.Clear();
         }
     }
 }
