@@ -1,4 +1,5 @@
 using Application;
+using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,7 @@ namespace Web_Api
         {
 
             services.AddControllers();
+            services.AddInfrastructureLayer();
             services.AddApplicationLayer();
             services.AddSwaggerGen(c =>
             {

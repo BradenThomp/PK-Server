@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace Domain.Common.Events
 {
-    public interface IEvent
-    {
-    }
+    public interface IEvent { }
 }
