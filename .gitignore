@@ -5,6 +5,7 @@
 
 # Application Secrets
 Web-Api/appsettings.json
+Web-Api/appsettings.Development.json
 
 # User-specific files
 *.rsuser
