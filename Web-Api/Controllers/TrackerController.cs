@@ -1,4 +1,5 @@
 ﻿using Application.Features.Tracking;
+using Application.Features.Tracking.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -16,9 +17,24 @@ namespace Web_Api.Controllers
         }
 
         [HttpPut]
-        public async Task UpdateTrackerLocation([FromBody] UpdateTrackerLocationCommand request)
+        [Route("api/[controller]/[action]")]
+        public async Task RegisterTracker([FromBody] RegisterTrackerCommand command)
         {
-            await _mediator.Send(request);
+            await _mediator.Send(command);
+        }
+
+        [HttpPut]
+        [Route("api/[controller]/[action]")]
+        public async Task UpdateTrackerLocation([FromBody] UpdateTrackerLocationCommand command)
+        {
+            await _mediator.Send(command);
+        }
+
+        [HttpGet]
+        [Route("api/[controller]/[action]/{macAddress}")]
+        public async Task<ActionResult<TrackerDto>> GetTracker(string macAddress)
+        {
+            return await _mediator.Send(new GetTrackerQuery(macAddress));
         }
     }
 }

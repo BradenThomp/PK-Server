@@ -5,6 +5,8 @@ namespace Domain.Common.Aggregates
 {
     public interface IAggregate
     {
+        string Id { get; }
+
         int Version { get; }
 
         void Apply(IEvent @event);

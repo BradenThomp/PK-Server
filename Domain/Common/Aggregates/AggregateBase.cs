@@ -7,7 +7,11 @@ namespace Domain.Common.Aggregates
     {
         private readonly ICollection<IEvent> _uncommittedEvents;
         private readonly IEventRouter _eventRouter;
-        
+
+        public int Version { get; protected set; }
+
+        public virtual string Id { get; }
+
         protected AggregateBase() : this(new ConventionalEventRouter()) { }
 
         protected AggregateBase(IEventRouter eventRouter)
@@ -16,8 +20,6 @@ namespace Domain.Common.Aggregates
             _uncommittedEvents = new List<IEvent>();
             _eventRouter.Register(this);
         }
-
-        public int Version { get; protected set; }
 
         protected void Raise(IEvent @event)
         {

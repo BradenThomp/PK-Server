@@ -6,7 +6,7 @@ using System;
 using NUnit.Framework;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.Features.Tracking;
+using Domain.Aggregates;
 
 namespace Application.Test.Features.Tracking
 {
@@ -18,14 +18,14 @@ namespace Application.Test.Features.Tracking
         public void Setup()
         {
             var eventRepositoryMock = new Mock<IEventRepository>();
-            eventRepositoryMock.Setup(er => er.GetByIdAsync<Tracker>(It.IsAny<Guid>())).ReturnsAsync(new Tracker());
+            eventRepositoryMock.Setup(er => er.GetByIdAsync<Tracker>(It.IsAny<string>())).ReturnsAsync(Tracker.RegisterTracker("00:00:5e:00:53:af"));
             _sytemUnderTest = new UpdateTrackerLocationCommandHandler(eventRepositoryMock.Object);
         }
 
         [Test]
         public async Task UpdateTrackerLocationCommandHandler_OnHandle_ReturnsUnitValue()
         {
-            var result = await _sytemUnderTest.Handle(new UpdateTrackerLocationCommand(40.1, -32.132, Guid.NewGuid(), DateTime.Now), new CancellationToken());
+            var result = await _sytemUnderTest.Handle(new UpdateTrackerLocationCommand(40.1, -32.132, "00:00:5e:00:53:af", DateTime.Now), new CancellationToken());
             Assert.That(result, Is.EqualTo(Unit.Value));
         }
     }
