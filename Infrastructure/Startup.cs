@@ -8,7 +8,7 @@ namespace Infrastructure
     {
         public static void AddInfrastructureLayer(this IServiceCollection services)
         {
-            services.AddSingleton<IEventRepository, InMemoryEventRepository>();
+            services.AddTransient<IEventRepository, EventRepository>();
         }
     }
 }

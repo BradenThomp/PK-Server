@@ -1,7 +1,5 @@
 ﻿using Application.Common.Repository;
 using Domain.Common.Aggregates;
-using Domain.Common.Events;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +13,11 @@ namespace Infrastructure.Persistence
     /// </summary>
     public class InMemoryEventRepository : IEventRepository
     {
-        private readonly ICollection<EventRecord> _inMemoryStore;
+        private readonly ICollection<SerializedEvent> _inMemoryStore;
 
         public InMemoryEventRepository()
         {
-            _inMemoryStore = new List<EventRecord>();
+            _inMemoryStore = new List<SerializedEvent>();
         }
 
         public async Task<TAggregate> GetByIdAsync<TAggregate>(string id) where TAggregate : IAggregate
@@ -28,7 +26,7 @@ namespace Infrastructure.Persistence
             var aggregate = Build<TAggregate>();
             foreach(var record in records)
             {
-                var @event = Deserialize(record.Data, record.Type);
+                var @event = SerializedEvent.Deserialize(record);
                 aggregate.Apply(@event);
             }
 
@@ -46,8 +44,7 @@ namespace Infrastructure.Persistence
             var version = aggregate.Version - events.Count + 1;
             foreach(var @event in events)
             {
-                var json = Serialize(@event);
-                var record = new EventRecord(aggregate.Id, version, @event.GetType(), json);
+                var record = SerializedEvent.Serialize(@event, aggregate.Id, version);
                 _inMemoryStore.Add(record);
                 version++;
             }
@@ -58,35 +55,6 @@ namespace Infrastructure.Persistence
             var type = typeof(TAggregate);
             ConstructorInfo constructor = type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { }, null);
             return (TAggregate)constructor.Invoke(new object[] { });
-        }
-
-        private string Serialize(IEvent @event)
-        {
-            return JsonConvert.SerializeObject(@event);
-        }
-
-        private IEvent Deserialize(string json, Type type)
-        {
-            return JsonConvert.DeserializeObject(json, type) as IEvent;
-        }
-    }
-
-    internal class EventRecord
-    {
-        public string AggregateId { get; set; }
-
-        public int Version { get; set; }
-
-        public string Data { get; set; }
-
-        public Type Type { get; set; }
-
-        public EventRecord(string aggregateId, int version, Type type, string data)
-        {
-            AggregateId = aggregateId;
-            Version = version;
-            Data = data;
-            Type = type;
         }
     }
 }
