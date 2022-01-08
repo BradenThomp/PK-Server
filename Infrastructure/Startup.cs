@@ -9,6 +9,7 @@ namespace Infrastructure
         public static void AddInfrastructureLayer(this IServiceCollection services)
         {
             services.AddTransient<IEventRepository, EventRepository>();
+            services.AddTransient<ISpeakerRepository, SpeakerRepository>();
         }
     }
 }

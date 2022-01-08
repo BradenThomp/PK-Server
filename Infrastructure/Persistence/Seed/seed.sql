@@ -8,3 +8,8 @@ CREATE TABLE `serialized_event` (
     `data` LONGTEXT NOT NULL,
     `type` LONGTEXT NOT NULL
 );
+
+CREATE TABLE `speaker` (
+	`SerialNumber` varchar(50) primary key NOT NULL,
+    `Model` varchar(50) NOT NULL
+);
