@@ -1,5 +1,6 @@
 using Application;
 using Infrastructure;
+using Infrastructure.Notifications;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,14 @@ namespace Web_Api
             services.AddControllers();
             services.AddInfrastructureLayer();
             services.AddApplicationLayer();
+            services.AddSignalR();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("NotificationPermission", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000").AllowCredentials();
+                });
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web_Api", Version = "v1" });
@@ -43,6 +52,8 @@ namespace Web_Api
 
             app.UseHttpsRedirection();
 
+            app.UseCors("NotificationPermission");
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -50,6 +61,7 @@ namespace Web_Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/notifications");
             });
         }
     }
