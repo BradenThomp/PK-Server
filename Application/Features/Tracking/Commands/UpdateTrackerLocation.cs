@@ -1,4 +1,6 @@
-﻿using Application.Common.Repository;
+﻿using Application.Common.Notifications;
+using Application.Common.Repository;
+using Application.Features.Tracking.Notification;
 using Domain.Aggregates;
 using Domain.Models;
 using MediatR;
@@ -13,17 +15,21 @@ namespace Application.Features.Tracking
     public class UpdateTrackerLocationCommandHandler : IRequestHandler<UpdateTrackerLocationCommand>
     {
         private readonly IEventRepository _eventRepository;
+        private readonly INotificationService _notificationService;
 
-        public UpdateTrackerLocationCommandHandler(IEventRepository eventRepository)
+        public UpdateTrackerLocationCommandHandler(IEventRepository eventRepository, INotificationService notificationService)
         {
             _eventRepository = eventRepository;
+            _notificationService = notificationService;
         }
 
         public async Task<Unit> Handle(UpdateTrackerLocationCommand request, CancellationToken cancellationToken)
         {
             var aggregate = await _eventRepository.GetByIdAsync<Tracker>(request.MACAddress) as Tracker;
-            aggregate.UpdateLocation(new Location(request.Longitude, request.Latitude), request.TimeOfUpdate);
+            var newLocation = new Location(request.Longitude, request.Latitude);
+            aggregate.UpdateLocation(newLocation, request.TimeOfUpdate);
             await _eventRepository.SaveAsync(aggregate);
+            await _notificationService.Notify(new LocationUpdatedNotification(newLocation, request.TimeOfUpdate, request.MACAddress));
             return Unit.Value;
         }
     }
