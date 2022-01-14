@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain.Aggregates;
+using Application.Common.Notifications;
 
 namespace Application.Test.Features.Tracking
 {
@@ -18,8 +19,9 @@ namespace Application.Test.Features.Tracking
         public void Setup()
         {
             var eventRepositoryMock = new Mock<IEventRepository>();
+            var notificationServiceMock = new Mock<INotificationService>();
             eventRepositoryMock.Setup(er => er.GetByIdAsync<Tracker>(It.IsAny<string>())).ReturnsAsync(Tracker.RegisterTracker("00:00:5e:00:53:af"));
-            _sytemUnderTest = new UpdateTrackerLocationCommandHandler(eventRepositoryMock.Object);
+            _sytemUnderTest = new UpdateTrackerLocationCommandHandler(eventRepositoryMock.Object, notificationServiceMock.Object);
         }
 
         [Test]
