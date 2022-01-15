@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="f4152d62-0f25-4ecb-a664-466f91e04fa0" ChangeDateTime="01/15/2022 16:45:29">
+    <Property Name="ElementName" Value="[dbo].[serialized_event].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[serialized_event]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="aggregate_id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="67ca1a52-7054-4fa3-91a9-a163df43f6ea" ChangeDateTime="01/15/2022 16:50:38">
+    <Property Name="ElementName" Value="[dbo].[speaker].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[speaker]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SerialNumber" />
+  </Operation>
+</Operations>
