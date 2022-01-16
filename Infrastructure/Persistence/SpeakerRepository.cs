@@ -8,6 +8,8 @@ namespace Infrastructure.Persistence
     {
         protected override string TableName => "speaker";
 
+        protected override string PrimaryKey => "SerialNumber";
+
         public SpeakerRepository(IConfiguration configuration) : base(configuration) { }
     }
 }
