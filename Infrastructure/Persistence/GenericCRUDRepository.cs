@@ -15,6 +15,7 @@ namespace Infrastructure.Persistence
     public abstract class GenericCRUDRepository<T> : ICRUDRepository<T>
     {
         protected abstract string TableName { get; }
+        protected virtual string PrimaryKey => "Id";
 
         private readonly IConfiguration _configuration;
 
@@ -45,9 +46,17 @@ namespace Infrastructure.Persistence
             }
         }
 
-        public Task<T> GetAsync(int id)
+        public async Task<T> GetAsync<Tid>(Tid id)
         {
-            throw new NotImplementedException();
+            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            {
+                var result = await connection.QuerySingleOrDefaultAsync<T>($"SELECT * FROM {TableName} WHERE {PrimaryKey}=@Id", new { Id = id });
+                if (result == null)
+                {
+                    throw new KeyNotFoundException($"{TableName} with id {id} could not be found.");
+                }
+                return result;
+            }
         }
 
         public Task UpdateAsync(T entity)
