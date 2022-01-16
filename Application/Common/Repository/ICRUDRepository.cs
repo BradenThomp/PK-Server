@@ -5,7 +5,7 @@ namespace Application.Common.Repository
 {
     public interface ICRUDRepository<T>
     {
-        Task<T> GetAsync(int id);
+        Task<T> GetAsync<Tid>(Tid id);
 
         Task<IEnumerable<T>> GetAllAsync();
 
