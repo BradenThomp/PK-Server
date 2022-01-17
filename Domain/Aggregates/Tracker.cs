@@ -1,6 +1,7 @@
 ﻿using Domain.Common.Aggregates;
 using Domain.Events;
 using Domain.Models;
+using Domain.Projections;
 using System;
 
 namespace Domain.Aggregates
@@ -37,12 +38,18 @@ namespace Domain.Aggregates
         private void Apply(TrackerRegisteredEvent @event)
         {
             MACAddress = @event.MACAddress;
+            Location = new Location(0.0, 0.0);
         }
 
         private void Apply(LocationUpdatedEvent @event)
         {
             Location = @event.Location;
             LastUpdate = @event.UpdateTime;
+        }
+
+        public override IProjection CreateProjection()
+        {
+            return new TrackerProjection(MACAddress, Location.Longitude, Location.Latitude, LastUpdate);
         }
     }
 }

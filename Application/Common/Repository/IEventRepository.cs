@@ -10,6 +10,6 @@ namespace Application.Common.Repository
 
         Task<TAggregate> GetByIdAsync<TAggregate>(string id, int version) where TAggregate : IAggregate;
 
-        Task SaveAsync(IAggregate aggregate);
+        Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
     }
 }

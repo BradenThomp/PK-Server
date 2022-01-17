@@ -38,7 +38,7 @@ namespace Infrastructure.Persistence
             throw new NotImplementedException();
         }
 
-        public async Task SaveAsync(IAggregate aggregate)
+        public async Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate
         {
             var events = aggregate.GetUncommittedEvents();
             var version = aggregate.Version - events.Count + 1;
