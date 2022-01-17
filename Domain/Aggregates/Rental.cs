@@ -1,6 +1,7 @@
 ﻿using Domain.Common.Aggregates;
 using Domain.Events;
 using Domain.Models;
+using Domain.Projections;
 using System;
 using System.Collections.Generic;
 
@@ -44,6 +45,11 @@ namespace Domain.Aggregates
             ExpectedReturnDate = @event.ExpectedReturnDate;
             Destination = @event.Destination;
             RentalId = Guid.NewGuid();
+        }
+
+        public override IProjection CreateProjection()
+        {
+            throw new NotImplementedException();
         }
     }
 }

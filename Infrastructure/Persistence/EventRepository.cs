@@ -1,6 +1,7 @@
 ﻿using Application.Common.Repository;
 using Dapper;
 using Domain.Common.Aggregates;
+using Infrastructure.Persistence.Projections;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System;
@@ -12,10 +13,12 @@ namespace Infrastructure.Persistence
     public class EventRepository : IEventRepository
     {
         private readonly IConfiguration _configuration;
+        private readonly IServiceProvider _serviceProvider;
 
-        public EventRepository(IConfiguration configuration)
+        public EventRepository(IConfiguration configuration, IServiceProvider serviceProvider)
         {
             _configuration = configuration;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<TAggregate> GetByIdAsync<TAggregate>(string id) where TAggregate : IAggregate
@@ -39,7 +42,7 @@ namespace Infrastructure.Persistence
             throw new NotImplementedException();
         }
 
-        public async Task SaveAsync(IAggregate aggregate)
+        public async Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
             {
@@ -51,6 +54,9 @@ namespace Infrastructure.Persistence
                     await connection.ExecuteAsync("INSERT INTO serialized_event(aggregate_id, version, data, type) VALUES(@AggregateId, @Version, @Data, @Type)", new { AggregateId=serializedEvent.AggregateId, Version=serializedEvent.Version, Data=serializedEvent.Data, Type= serializedEvent.Type});
                     version++;
                 }
+                // Saves a snapshot of the aggregate so it is easier to access when querying.
+                var projectionWriter = _serviceProvider.GetService(typeof(IProjectionWriter<TAggregate>)) as IProjectionWriter<TAggregate>;
+                await projectionWriter.SaveProjection(aggregate);
             }
         }
         private TAggregate Build<TAggregate>() where TAggregate : IAggregate

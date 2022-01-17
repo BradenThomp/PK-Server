@@ -1,4 +1,5 @@
 ﻿using Domain.Common.Events;
+using Domain.Projections;
 using System.Collections.Generic;
 
 namespace Domain.Common.Aggregates
@@ -42,5 +43,7 @@ namespace Domain.Common.Aggregates
         {
             _uncommittedEvents.Clear();
         }
+
+        public abstract IProjection CreateProjection();
     }
 }

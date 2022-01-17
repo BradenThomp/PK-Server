@@ -2,6 +2,7 @@
 using Application.Features.Tracking.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Web_Api.Controllers
@@ -35,6 +36,13 @@ namespace Web_Api.Controllers
         public async Task<ActionResult<TrackerDto>> GetTracker(string macAddress)
         {
             return await _mediator.Send(new GetTrackerQuery(macAddress));
+        }
+
+        [HttpGet]
+        [Route("api/[controller]/[action]")]
+        public async Task<IEnumerable<TrackerDto>> GetAll()
+        {
+            return await _mediator.Send(new GetAllTrackersQuery());
         }
     }
 }

@@ -13,3 +13,10 @@ CREATE TABLE `speaker` (
 	`SerialNumber` varchar(50) primary key NOT NULL,
     `Model` varchar(50) NOT NULL
 );
+
+CREATE TABLE `tracker_projection` (
+	`MACAddress` varchar(50) primary key NOT NULL,
+    `Longitude` double NOT NULL,
+    `Latitude` double NOT NULL,
+    `LastUpdate` datetime NOT NULL
+);
