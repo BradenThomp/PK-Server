@@ -17,7 +17,7 @@ namespace Web_Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("api/[controller]/[action]")]
         public async Task RegisterTracker([FromBody] RegisterTrackerCommand command)
         {
