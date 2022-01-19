@@ -18,28 +18,28 @@ namespace Web_Api.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/[action]")]
+        [Route("[action]")]
         public async Task RegisterTracker([FromBody] RegisterTrackerCommand command)
         {
             await _mediator.Send(command);
         }
 
         [HttpPut]
-        [Route("api/[controller]/[action]")]
+        [Route("[action]")]
         public async Task UpdateTrackerLocation([FromBody] UpdateTrackerLocationCommand command)
         {
             await _mediator.Send(command);
         }
 
         [HttpGet]
-        [Route("api/[controller]/[action]/{macAddress}")]
+        [Route("[action]/{macAddress}")]
         public async Task<ActionResult<TrackerDto>> GetTracker(string macAddress)
         {
             return await _mediator.Send(new GetTrackerQuery(macAddress));
         }
 
         [HttpGet]
-        [Route("api/[controller]/[action]")]
+        [Route("[action]")]
         public async Task<IEnumerable<TrackerDto>> GetAll()
         {
             return await _mediator.Send(new GetAllTrackersQuery());

@@ -19,14 +19,14 @@ namespace Web_Api.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/[action]")]
+        [Route("[action]")]
         public async Task AddSpeaker([FromBody] AddSpeakerCommand command)
         {
             await _mediator.Send(command);
         }
 
         [HttpGet]
-        [Route("api/[controller]/[action]")]
+        [Route("[action]")]
         public async Task<IEnumerable<SpeakerDto>> GetAllSpeakers()
         {
             return await _mediator.Send(new GetAllSpeakersQuery());
