@@ -14,8 +14,8 @@ namespace Web_Api.Controllers
         {
             _mediator = mediator;
         }
-
-        [HttpPut]
+        
+        [HttpPost]
         [Route("[action]")]
         public async Task CreateRental([FromBody] CreateRentalCommand command)
         {
