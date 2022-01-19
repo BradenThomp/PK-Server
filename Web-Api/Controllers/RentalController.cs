@@ -14,9 +14,9 @@ namespace Web_Api.Controllers
         {
             _mediator = mediator;
         }
-
+        
         [HttpPost]
-        [Route("api/[controller]/[action]")]
+        [Route("[action]")]
         public async Task CreateRental([FromBody] CreateRentalCommand command)
         {
             await _mediator.Send(command);
