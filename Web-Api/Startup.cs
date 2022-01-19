@@ -31,7 +31,7 @@ namespace Web_Api
             {
                 options.AddPolicy("NotificationPermission", policy =>
                 {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000").AllowCredentials();
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(Configuration.GetValue<string>("ClientAppSettings:BaseUrl")).AllowCredentials();
                 });
             });
             services.AddSwaggerGen(c =>
@@ -52,9 +52,10 @@ namespace Web_Api
 
             app.UseHttpsRedirection();
 
-            app.UseCors("NotificationPermission");
 
             app.UseRouting();
+
+            app.UseCors("NotificationPermission");
 
             app.UseAuthorization();
 
