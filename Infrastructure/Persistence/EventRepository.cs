@@ -51,7 +51,8 @@ namespace Infrastructure.Persistence
                 foreach (var @event in events)
                 {
                     var serializedEvent = SerializedEvent.Serialize(@event, aggregate.Id, version);
-                    await connection.ExecuteAsync("INSERT INTO serialized_event(aggregate_id, version, data, type) VALUES(@AggregateId, @Version, @Data, @Type)", new { AggregateId=serializedEvent.AggregateId, Version=serializedEvent.Version, Data=serializedEvent.Data, Type= serializedEvent.Type});
+                    var tableName = typeof(TAggregate).Name.ToLower();
+                    await connection.ExecuteAsync($"INSERT INTO {tableName}_event_stream(aggregate_id, version, data, type) VALUES(@AggregateId, @Version, @Data, @Type)", new { AggregateId=serializedEvent.AggregateId, Version=serializedEvent.Version, Data=serializedEvent.Data, Type= serializedEvent.Type});
                     version++;
                 }
                 // Saves a snapshot of the aggregate so it is easier to access when querying.

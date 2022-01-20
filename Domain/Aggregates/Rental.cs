@@ -49,7 +49,7 @@ namespace Domain.Aggregates
 
         public override IProjection CreateProjection()
         {
-            throw new NotImplementedException();
+            return new RentalProjection(Customer.Id, RentalDate, ExpectedReturnDate, Destination.Id, RentalId);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Infrastructure
             services.AddTransient<ISpeakerRepository, SpeakerRepository>();
             services.AddTransient<INotificationService, NotificationHub>();
             services.AddTransient<IProjectionWriter<Tracker>, TrackerProjectionRepository>();
+            services.AddTransient<IProjectionWriter<Rental>, RentalProjectionRepository>();
             services.AddTransient<ITrackerProjectionRepository, TrackerProjectionRepository>();
         }
     }
