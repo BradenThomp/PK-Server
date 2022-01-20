@@ -3,6 +3,7 @@ using Application.Features.Tracking.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Web_Api.Controllers
@@ -18,31 +19,35 @@ namespace Web_Api.Controllers
         }
 
         [HttpPost]
-        [Route("[action]")]
-        public async Task Register([FromBody] RegisterTrackerCommand command)
+        public async Task<ActionResult> Register(RegisterTrackerCommand command)
         {
             await _mediator.Send(command);
+            return Ok();
         }
 
-        [HttpPut]
-        [Route("[action]")]
-        public async Task UpdateLocation([FromBody] UpdateTrackerLocationCommand command)
+        [HttpPut("{macAddress}")]
+        public async Task<ActionResult> UpdateLocation(string macAddress, UpdateTrackerLocationCommand command)
         {
+            if(command.MACAddress != macAddress)
+            {
+                return BadRequest();
+            }
             await _mediator.Send(command);
+
+            return NoContent();
         }
 
-        [HttpGet]
-        [Route("[action]/{macAddress}")]
+        [HttpGet("{macAddress}")]
         public async Task<ActionResult<TrackerDto>> Get(string macAddress)
         {
             return await _mediator.Send(new GetTrackerQuery(macAddress));
         }
 
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<IEnumerable<TrackerDto>> GetAll()
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<TrackerDto>>> GetAll()
         {
-            return await _mediator.Send(new GetAllTrackersQuery());
+            var result = await _mediator.Send(new GetAllTrackersQuery());
+            return result.ToList();
         }
     }
 }

@@ -16,10 +16,10 @@ namespace Web_Api.Controllers
         }
         
         [HttpPost]
-        [Route("[action]")]
-        public async Task Create([FromBody] CreateRentalCommand command)
+        public async Task<ActionResult> Create([FromBody] CreateRentalCommand command)
         {
             await _mediator.Send(command);
+            return Ok();
         }
     }
 }

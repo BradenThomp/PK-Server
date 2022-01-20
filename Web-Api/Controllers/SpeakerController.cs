@@ -4,6 +4,7 @@ using Application.Features.Speaker.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Web_Api.Controllers
@@ -19,17 +20,17 @@ namespace Web_Api.Controllers
         }
 
         [HttpPost]
-        [Route("[action]")]
-        public async Task Add([FromBody] AddSpeakerCommand command)
+        public async Task<ActionResult> Add([FromBody] AddSpeakerCommand command)
         {
             await _mediator.Send(command);
+            return Ok();
         }
 
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<IEnumerable<SpeakerDto>> GetAll()
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<SpeakerDto>>> GetAll()
         {
-            return await _mediator.Send(new GetAllSpeakersQuery());
+            var result = await _mediator.Send(new GetAllSpeakersQuery());
+            return result.ToList();
         }
     }
 }
