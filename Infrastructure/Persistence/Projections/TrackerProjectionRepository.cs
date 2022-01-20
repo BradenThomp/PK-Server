@@ -35,7 +35,7 @@ namespace Infrastructure.Persistence.Projections
             var projection = aggregate.CreateProjection();
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
             {
-                return await connection.ExecuteAsync("INSERT INTO tracker_projection(MACAddress, Longitude, Latitude, LastUpdate) VALUES (@MACAddress, @Longitude, @Latitude, @LastUpdate) ON DUPLICATE KEY UPDATE Longitude=@Longitude, Latitude=@Latitude, LastUpdate=@LastUpdate;", projection);
+                return await connection.ExecuteAsync("INSERT INTO tracker_projection(MACAddress, Longitude, Latitude, LastUpdate, SpeakerSerialNumber) VALUES (@MACAddress, @Longitude, @Latitude, @LastUpdate, @SpeakerSerialNumber) ON DUPLICATE KEY UPDATE Longitude=@Longitude, Latitude=@Latitude, LastUpdate=@LastUpdate, SpeakerSerialNumber=@SpeakerSerialNumber;", projection);
             }
         }
     }

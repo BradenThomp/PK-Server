@@ -1,5 +1,4 @@
 ﻿using Application.Common.Repository;
-using Application.Features.Tracking;
 using Moq;
 using MediatR;
 using System;
@@ -8,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Domain.Aggregates;
 using Application.Common.Notifications;
+using Application.Features.Tracking.Commands;
 
 namespace Application.Test.Features.Tracking
 {
