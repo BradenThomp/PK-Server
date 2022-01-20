@@ -20,7 +20,7 @@ namespace Web_Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Add([FromBody] AddSpeakerCommand command)
+        public async Task<ActionResult> Add(AddSpeakerCommand command)
         {
             await _mediator.Send(command);
             return Ok();
