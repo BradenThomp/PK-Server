@@ -12,6 +12,8 @@ namespace Domain.Aggregates
 
         public DateTime LastUpdate { get; private set; }
 
+        public Speaker AssignedSpeaker { get; private set; }
+
         public string MACAddress { get; private set; }
 
         public override string Id { get => MACAddress; }
@@ -35,6 +37,17 @@ namespace Domain.Aggregates
             Raise(new LocationUpdatedEvent(location, updateTime));
         }
 
+        public void AssignSpeaker(Speaker speaker)
+        {
+            Raise(new TrackerAttachedToSpeakerEvent(speaker));
+        }
+
+        public void Apply(TrackerAttachedToSpeakerEvent @event)
+        {
+            AssignedSpeaker = @event.AssignedSpeaker;
+            @event.AssignedSpeaker.TrackerId = Id;
+        }
+
         private void Apply(TrackerRegisteredEvent @event)
         {
             MACAddress = @event.MACAddress;
@@ -49,7 +62,7 @@ namespace Domain.Aggregates
 
         public override IProjection CreateProjection()
         {
-            return new TrackerProjection(MACAddress, Location.Longitude, Location.Latitude, LastUpdate);
+            return new TrackerProjection(MACAddress, Location.Longitude, Location.Latitude, LastUpdate, AssignedSpeaker?.SerialNumber);
         }
     }
 }

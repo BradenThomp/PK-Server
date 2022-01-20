@@ -5,5 +5,5 @@ using System;
 namespace Domain.Events
 {
     [Serializable]
-    public record TrackerAttachedToSpeakerEvent(Speaker attachedTo) : IEvent;
+    public record TrackerAttachedToSpeakerEvent(Speaker AssignedSpeaker) : IEvent;
 }

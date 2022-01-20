@@ -25,7 +25,8 @@ namespace Infrastructure.Persistence
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
             {
-                var serializedEvents = await connection.QueryAsync<SerializedEvent>("SELECT * FROM serialized_event WHERE aggregate_id = @Id ORDER BY version", new { Id = id });
+                var tableName = typeof(TAggregate).Name.ToLower();
+                var serializedEvents = await connection.QueryAsync<SerializedEvent>($"SELECT * FROM {tableName}_event_stream WHERE aggregate_id = @Id ORDER BY version", new { Id = id });
                 var aggregate = Build<TAggregate>();
                 foreach (var serializedEvent in serializedEvents)
                 {

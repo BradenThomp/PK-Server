@@ -8,7 +8,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.Tracking
+namespace Application.Features.Tracking.Commands
 {
     public record UpdateTrackerLocationCommand(double Longitude, double Latitude, string MACAddress, DateTime TimeOfUpdate) : IRequest;
 

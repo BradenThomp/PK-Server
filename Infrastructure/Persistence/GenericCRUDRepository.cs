@@ -17,7 +17,7 @@ namespace Infrastructure.Persistence
         protected abstract string TableName { get; }
         protected virtual string PrimaryKey => "Id";
 
-        private readonly IConfiguration _configuration;
+        protected readonly IConfiguration _configuration;
 
         public GenericCRUDRepository(IConfiguration configuration)
         {

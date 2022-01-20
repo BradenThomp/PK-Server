@@ -1,4 +1,5 @@
 ﻿using Application.Features.Tracking;
+using Application.Features.Tracking.Commands;
 using Application.Features.Tracking.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +26,22 @@ namespace Web_Api.Controllers
             return Ok();
         }
 
-        [HttpPut("{macAddress}")]
-        public async Task<ActionResult> UpdateLocation(string macAddress, UpdateTrackerLocationCommand command)
+        [HttpPut("[Action]/{macAddress}")]
+        public async Task<ActionResult> Location(string macAddress, UpdateTrackerLocationCommand command)
         {
             if(command.MACAddress != macAddress)
+            {
+                return BadRequest();
+            }
+            await _mediator.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpPut("[Action]/{id}")]
+        public async Task<ActionResult> Assign(string id, AssignToSpeakerCommand command)
+        {
+            if (command.TrackerId != id)
             {
                 return BadRequest();
             }
