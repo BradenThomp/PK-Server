@@ -27,18 +27,7 @@ namespace Application.Features.Tracking
         public async Task<IEnumerable<TrackerDto>> Handle(GetAllTrackersQuery request, CancellationToken cancellationToken)
         {
             var trackerProjections = await _repository.GetAllAsync();
-            List<TrackerDto> result = new List<TrackerDto>();
-            foreach(var t in trackerProjections)
-            {
-                SpeakerDto speakerDto = null;
-                if (t.SpeakerSerialNumber != null)
-                {
-                    var speaker = await _speakerRepository.GetAsync(t.SpeakerSerialNumber);
-                    speakerDto = new SpeakerDto(speaker.Model, speaker.SerialNumber);
-                }
-                result.Add(new TrackerDto(t.MACAddress, t.Longitude, t.Latitude, t.LastUpdate, speakerDto));
-            }
-            return result;
+            return trackerProjections.Select(t => new TrackerDto(t.MACAddress, t.Longitude, t.Latitude, t.LastUpdate, new SpeakerDto(t.Speaker.Model, t.Speaker.SerialNumber)));
         }
     }
 }
