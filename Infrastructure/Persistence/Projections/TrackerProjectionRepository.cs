@@ -44,8 +44,8 @@ namespace Infrastructure.Persistence.Projections
             {
                 return await connection.ExecuteAsync(
                     "INSERT INTO tracker_projection(MACAddress, Longitude, Latitude, LastUpdate, SpeakerSerialNumber) " +
-                    "VALUES (@MACAddress, @Longitude, @Latitude, @LastUpdate, @SpeakerSerialNumber) " +
-                    "ON DUPLICATE KEY UPDATE Longitude=@Longitude, Latitude=@Latitude, LastUpdate=@LastUpdate, SpeakerSerialNumber=@SpeakerSerialNumber;", 
+                    "VALUES (@MACAddress, @Longitude, @Latitude, @LastUpdate, @SerialNumber) " +
+                    "ON DUPLICATE KEY UPDATE Longitude=@Longitude, Latitude=@Latitude, LastUpdate=@LastUpdate, SpeakerSerialNumber=@SerialNumber;", 
                     new { projection.MACAddress, projection.Longitude, projection.Latitude, projection.LastUpdate, projection.Speaker?.SerialNumber});
             }
         }
