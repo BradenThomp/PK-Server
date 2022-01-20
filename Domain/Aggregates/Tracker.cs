@@ -62,7 +62,7 @@ namespace Domain.Aggregates
 
         public override IProjection CreateProjection()
         {
-            return new TrackerProjection(MACAddress, Location.Longitude, Location.Latitude, LastUpdate, AssignedSpeaker?.SerialNumber);
+            return new TrackerProjection(MACAddress, Location.Longitude, Location.Latitude, LastUpdate, AssignedSpeaker);
         }
     }
 }

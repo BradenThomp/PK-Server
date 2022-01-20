@@ -1,6 +1,7 @@
 ﻿using Application.Common.Repository;
 using Dapper;
 using Domain.Aggregates;
+using Domain.Models;
 using Domain.Projections;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
@@ -21,7 +22,13 @@ namespace Infrastructure.Persistence.Projections
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
             {
-                return await connection.QueryAsync<TrackerProjection>($"SELECT * FROM tracker_projection");
+                return await connection.QueryAsync<TrackerProjection, Speaker, TrackerProjection>(
+                    $"SELECT * " +
+                    $"FROM tracker_projection t " +
+                    $"LEFT JOIN speaker s ON t.SpeakerSerialNumber = s.SerialNumber", (tracker, speaker) => {
+                        tracker.Speaker = speaker;
+                        return tracker;
+                    }, splitOn: "SpeakerSerialNumber");
             }
         }
 
@@ -32,10 +39,14 @@ namespace Infrastructure.Persistence.Projections
 
         public async Task<int> SaveProjection(Tracker aggregate)
         {
-            var projection = aggregate.CreateProjection();
+            var projection = aggregate.CreateProjection() as TrackerProjection;
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
             {
-                return await connection.ExecuteAsync("INSERT INTO tracker_projection(MACAddress, Longitude, Latitude, LastUpdate, SpeakerSerialNumber) VALUES (@MACAddress, @Longitude, @Latitude, @LastUpdate, @SpeakerSerialNumber) ON DUPLICATE KEY UPDATE Longitude=@Longitude, Latitude=@Latitude, LastUpdate=@LastUpdate, SpeakerSerialNumber=@SpeakerSerialNumber;", projection);
+                return await connection.ExecuteAsync(
+                    "INSERT INTO tracker_projection(MACAddress, Longitude, Latitude, LastUpdate, SpeakerSerialNumber) " +
+                    "VALUES (@MACAddress, @Longitude, @Latitude, @LastUpdate, @SpeakerSerialNumber) " +
+                    "ON DUPLICATE KEY UPDATE Longitude=@Longitude, Latitude=@Latitude, LastUpdate=@LastUpdate, SpeakerSerialNumber=@SpeakerSerialNumber;", 
+                    new { projection.MACAddress, projection.Longitude, projection.Latitude, projection.LastUpdate, projection.Speaker?.SerialNumber});
             }
         }
     }
