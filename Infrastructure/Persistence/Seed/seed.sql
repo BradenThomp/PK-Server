@@ -6,7 +6,8 @@ CREATE TABLE `serialized_event` (
 	`aggregate_id` varchar(50) NOT NULL,
     `version` int NOT NULL,
     `data` LONGTEXT NOT NULL,
-    `type` LONGTEXT NOT NULL
+    `type` LONGTEXT NOT NULL,
+    PRIMARY KEY (`aggregate_id`, `version`)
 );
 
 CREATE TABLE `speaker` (
