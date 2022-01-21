@@ -18,8 +18,8 @@ namespace Application.Features.Speaker.Commands
 
         public async Task<Unit> Handle(AddSpeakerCommand request, CancellationToken cancellationToken)
         {
-            var speaker = new Domain.Models.Speaker(request.SerialNumber, request.Model);
-            await _repository.AddAsync(speaker);
+            //var speaker = new Domain.Models.Speaker(request.SerialNumber, request.Model);
+            //await _repository.AddAsync(speaker);
             return Unit.Value;
         }
     }

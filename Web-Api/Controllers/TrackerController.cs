@@ -1,6 +1,6 @@
-﻿using Application.Features.Tracking;
-using Application.Features.Tracking.Commands;
-using Application.Features.Tracking.Dtos;
+﻿using Application.Features.Tracking.Commands;
+using Application.Features.Tracking.Queries;
+using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -20,13 +20,13 @@ namespace Web_Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Register(RegisterTrackerCommand command)
+        public async Task<ActionResult> Create(CreateTrackerCommand command)
         {
             await _mediator.Send(command);
             return Ok();
         }
 
-        [HttpPut("[Action]/{macAddress}")]
+        /**[HttpPut("[Action]/{macAddress}")]
         public async Task<ActionResult> Location(string macAddress, UpdateTrackerLocationCommand command)
         {
             if(command.MACAddress != macAddress)
@@ -36,28 +36,16 @@ namespace Web_Api.Controllers
             await _mediator.Send(command);
 
             return NoContent();
-        }
+        }**/
 
-        [HttpPut("[Action]/{id}")]
-        public async Task<ActionResult> Assign(string id, AssignToSpeakerCommand command)
-        {
-            if (command.TrackerId != id)
-            {
-                return BadRequest();
-            }
-            await _mediator.Send(command);
-
-            return NoContent();
-        }
-
-        [HttpGet("{macAddress}")]
+        /**[HttpGet("{macAddress}")]
         public async Task<ActionResult<TrackerDto>> Get(string macAddress)
         {
             return await _mediator.Send(new GetTrackerQuery(macAddress));
-        }
+        }*/
 
         [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<TrackerDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Tracker>>> GetAll()
         {
             var result = await _mediator.Send(new GetAllTrackersQuery());
             return result.ToList();

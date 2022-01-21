@@ -1,6 +1,4 @@
-﻿using Domain.Aggregates;
-
-namespace Application.Features.Speaker.Dtos
+﻿namespace Application.Features.Speaker.Dtos
 {
     public class SpeakerDto
     {

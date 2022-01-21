@@ -3,24 +3,39 @@ using Dapper;
 using Domain.Models;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
 {
-    public class SpeakerRepository : GenericCRUDRepository<Speaker>, ISpeakerRepository
+    public class SpeakerRepository : BaseCRUDRepository<Speaker>, ISpeakerRepository
     {
-        protected override string TableName => "speaker";
-
-        protected override string PrimaryKey => "SerialNumber";
 
         public SpeakerRepository(IConfiguration configuration) : base(configuration) { }
 
-        public new async Task UpdateAsync(Speaker entity)
+        public override async Task<int> AddAsync(Speaker entity)
         {
-            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
-            {
-                await connection.ExecuteAsync("UPDATE speaker SET Model=@Model, TrackerId=@TrackerId", new { entity.Model, entity.TrackerId});
-            }
+            throw new System.NotImplementedException();
+        }
+
+        public override Task DeleteAsync(Speaker entity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task<IEnumerable<Speaker>> GetAllAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task<Speaker> GetAsync<Tid>(Tid id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task UpdateAsync(Speaker entity)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
