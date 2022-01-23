@@ -1,6 +1,4 @@
 ﻿using Application.Common.Repository;
-using Application.Features.Customer.Dtos;
-using Application.Features.Venue.Dtos;
 using MediatR;
 using System;
 using System.Collections.Generic;
