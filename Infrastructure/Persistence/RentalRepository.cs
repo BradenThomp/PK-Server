@@ -10,11 +10,7 @@ namespace Infrastructure.Persistence
 {
     public class RentalRepository : BaseCRUDRepository<Rental>, IRentalRepository
     {
-        private readonly ISpeakerRepository _speakerRepo;
-        public RentalRepository(IConfiguration configuration, ISpeakerRepository speakerRepo) : base(configuration) 
-        {
-            _speakerRepo = speakerRepo;
-        }
+        public RentalRepository(IConfiguration configuration) : base(configuration) { }
 
         public override async Task AddAsync(Rental entity)
         {
@@ -51,7 +47,8 @@ namespace Infrastructure.Persistence
 
                 foreach(var speaker in entity.RentedSpeakers)
                 {
-                    await _speakerRepo.UpdateAsync(speaker);
+                    var updateQuery = $"UPDATE speaker SET TrackerId=@TrackerId, RentalId=@RentalId WHERE SerialNumber=@SerialNumber";
+                    await connection.ExecuteAsync(updateQuery, new { SerialNumber = speaker.SerialNumber, RentalId=entity.Id, TrackerId = speaker.Tracker?.HardwareId });
                 }
             }
         }
@@ -61,9 +58,40 @@ namespace Infrastructure.Persistence
             throw new System.NotImplementedException();
         }
 
-        public override Task<IEnumerable<Rental>> GetAllAsync()
+        public override async Task<IEnumerable<Rental>> GetAllAsync()
         {
-            throw new System.NotImplementedException();
+            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            {
+                var rentals = await connection.QueryAsync<Rental, Customer, Venue, Rental>(
+                    $"SELECT *" +
+                    $"FROM rental r " +
+                    $"INNER JOIN customer c ON c.Id = r.CustomerId " +
+                    $"INNER JOIN venue v ON v.Id = r.DestinationId", 
+                    (rental, customer, destination) =>
+                    {
+                        rental.Customer = customer;
+                        rental.Destination = destination;
+                        return rental;
+                    });
+
+                foreach (var rental in rentals)
+                {
+                    rental.RentedSpeakers = await connection.QueryAsync<Speaker, Tracker, Location, Speaker>(
+                        $"SELECT * " +
+                        $"FROM speaker s " +
+                        $"LEFT JOIN tracker t ON s.TrackerId = t.HardwareId " +
+                        $"LEFT JOIN location l ON t.LocationId = l.Id " +
+                        $"WHERE s.RentalId=@RentalId", (speaker, tracker, location) => {
+                            if(tracker.HardwareId is not null)
+                            {
+                                tracker.Location = location;
+                                speaker.Tracker = tracker;
+                            }
+                            return speaker;
+                        }, new { RentalId = rental.Id }, splitOn: "TrackerId,LocationId");
+                }
+                return rentals;
+            }
         }
 
         public override Task<Rental> GetAsync<Tid>(Tid id)

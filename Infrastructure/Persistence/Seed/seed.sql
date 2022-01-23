@@ -32,12 +32,10 @@ CREATE TABLE `tracker` (
 
 CREATE TABLE `rental` (
 	`Id` char(36) primary key NOT NULL,
+	`CustomerId` char(36) NOT NULL,
 	`RentalDate` datetime NOT NULL,
-    `ExpectedReturnDate` datetime NOT NULL,
-    `CustomerId` char(36) NOT NULL,
-    `DestinationId` char(36) NOT NULL,
-    FOREIGN KEY (`CustomerId`) REFERENCES customer (`Id`),
-    FOREIGN KEY (`DestinationId`) REFERENCES venue (`Id`)
+	`DestinationId` char(36) NOT NULL,
+    `ExpectedReturnDate` datetime NOT NULL
 );
 
 CREATE TABLE `speaker` (
