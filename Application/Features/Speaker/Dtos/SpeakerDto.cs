@@ -1,17 +1,6 @@
-﻿using Domain.Aggregates;
+﻿using Application.Features.Tracking.Dtos;
 
 namespace Application.Features.Speaker.Dtos
 {
-    public class SpeakerDto
-    {
-        public string Model { get; }
-
-        public string SerialNumber { get; }
-
-        public SpeakerDto(string model, string serialNumber)
-        {
-            Model = model;
-            SerialNumber = serialNumber;
-        }
-    }
+    public record SpeakerDto(string SerialNumber, string Model, TrackerDto Tracker);
 }

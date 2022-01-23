@@ -1,11 +1,12 @@
-﻿using Domain.Aggregates;
+﻿//using Domain.Aggregates;
 using Domain.Models;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 
 namespace Domain.Test.Features.Tracking
 {
-    public class TrackerTest
+    /**public class TrackerTest
     {
         private Tracker _sytemUnderTest;
         
@@ -43,13 +44,5 @@ namespace Domain.Test.Features.Tracking
             _sytemUnderTest.UpdateLocation(new Location(30.12, -32.531234), new DateTime(2021, 7, 13));
             Assert.That(_sytemUnderTest.GetUncommittedEvents().Count, Is.EqualTo(3));
         }
-
-        [Test]
-        public void GetUncommittedEvents_AfterClearEvents_ReturnsZeroUncommittedEvents()
-        {
-            _sytemUnderTest.UpdateLocation(new Location(30.12, -32.531234), new DateTime(2021, 7, 12));
-            _sytemUnderTest.ClearUncommittedEvents();
-            Assert.That(_sytemUnderTest.GetUncommittedEvents().Count, Is.EqualTo(0));
-        }
-    }
+    }**/
 }

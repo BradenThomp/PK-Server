@@ -9,7 +9,19 @@ namespace Domain.Models
 
         public double Latitude { get; set; }
 
+        public Guid Id { get; set; }
+
         public Location(double longitude, double latitude)
+        {
+            Validate(longitude, latitude);
+            Longitude = longitude;
+            Latitude = latitude;
+            Id = Guid.NewGuid();
+        }
+
+        public Location(){}
+
+        private void Validate(double longitude, double latitude)
         {
             if (longitude < -180 || longitude > 180)
             {
@@ -19,8 +31,6 @@ namespace Domain.Models
             {
                 throw new InvalidOperationException("Latitude must lie in range of -90 to 90 degrees.");
             }
-            Longitude = longitude;
-            Latitude = latitude;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Domain.Common.Models;
+using System;
 
 namespace Domain.Models
 {
@@ -8,7 +9,7 @@ namespace Domain.Models
 
         public string Model { get; init; }
 
-        public string TrackerId { get; set; }
+        public Tracker Tracker { get; set; }
 
         public Speaker() { }
 
