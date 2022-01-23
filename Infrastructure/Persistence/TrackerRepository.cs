@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -44,14 +45,31 @@ namespace Infrastructure.Persistence
             }
         }
 
-        public override Task<Tracker> GetAsync<Tid>(Tid id)
+        public override async Task<Tracker> GetAsync<Tid>(Tid id)
         {
-            throw new NotImplementedException();
+            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            {
+                return (await connection.QueryAsync<Tracker, Location, Tracker>(
+                    $"SELECT * " +
+                    $"FROM tracker t " +
+                    $"INNER JOIN location l ON t.LocationId = l.Id " +
+                    $"WHERE t.HardwareId = @HardwareId", (tracker, location) => {
+                        tracker.Location = location;
+                        return tracker;
+                    }, new { HardwareId=id }, splitOn: "LocationId")).Single();
+            }
         }
 
-        public override Task UpdateAsync(Tracker entity)
+        public override async Task UpdateAsync(Tracker entity)
         {
-            throw new NotImplementedException();
+            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            {
+                var updateQuery = $"UPDATE location SET Longitude=@Longitude, Latitude=@Latitude WHERE Id=@Id";
+                await connection.ExecuteAsync(updateQuery, new { Id = entity.Location.Id, Longitude = entity.Location.Longitude, Latitude = entity.Location.Latitude });
+
+                updateQuery = $"UPDATE tracker SET LastUpdate=@LastUpdate, LocationId=@LocationId WHERE HardwareId=@HardwareId";
+                await connection.ExecuteAsync(updateQuery, new { HardwareId = entity.HardwareId, LastUpdate = entity.LastUpdate, LocationId = entity.Location.Id });
+            }
         }
     }
 }

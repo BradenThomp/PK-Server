@@ -2,7 +2,7 @@
 using Domain.Models;
 using System;
 
-namespace Application.Features.Tracking.Notification
+namespace Application.Features.Tracking.Notifications
 {
     public class LocationUpdatedNotification : INotification
     {

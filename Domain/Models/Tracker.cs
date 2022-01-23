@@ -10,5 +10,12 @@ namespace Domain.Models
         public DateTime LastUpdate { get; set; }
 
         public Location Location { get; set; }
+
+        public void UpdateLocation(double longitude, double latitude)
+        {
+            Location.Longitude = longitude;
+            Location.Latitude = latitude;
+            LastUpdate = DateTime.UtcNow;
+        }
     }
 }

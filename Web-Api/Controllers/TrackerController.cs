@@ -1,6 +1,6 @@
 ﻿using Application.Features.Tracking.Commands;
+using Application.Features.Tracking.Dtos;
 using Application.Features.Tracking.Queries;
-using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -26,26 +26,26 @@ namespace Web_Api.Controllers
             return Ok();
         }
 
-        /**[HttpPut("[Action]/{macAddress}")]
-        public async Task<ActionResult> Location(string macAddress, UpdateTrackerLocationCommand command)
+        [HttpPut("[Action]/{hardwareId}")]
+        public async Task<ActionResult> Update(string hardwareId, UpdateTrackerCommand command)
         {
-            if(command.MACAddress != macAddress)
+            if(command.HardwareId != hardwareId)
             {
                 return BadRequest();
             }
             await _mediator.Send(command);
 
             return NoContent();
-        }**/
+        }
 
-        /**[HttpGet("{macAddress}")]
-        public async Task<ActionResult<TrackerDto>> Get(string macAddress)
+        [HttpGet("{hardwareId}")]
+        public async Task<ActionResult<TrackerDto>> Get(string hardwareId)
         {
-            return await _mediator.Send(new GetTrackerQuery(macAddress));
-        }*/
+            return await _mediator.Send(new GetTrackerQuery(hardwareId));
+        }
 
         [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<Tracker>>> GetAll()
+        public async Task<ActionResult<IEnumerable<TrackerDto>>> GetAll()
         {
             var result = await _mediator.Send(new GetAllTrackersQuery());
             return result.ToList();
