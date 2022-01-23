@@ -26,7 +26,7 @@ namespace Web_Api.Controllers
             return Ok();
         }
 
-        [HttpPut("[Action]/{hardwareId}")]
+        [HttpPut("{hardwareId}")]
         public async Task<ActionResult> Update(string hardwareId, UpdateTrackerCommand command)
         {
             if(command.HardwareId != hardwareId)

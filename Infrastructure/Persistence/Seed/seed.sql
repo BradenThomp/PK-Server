@@ -43,7 +43,7 @@ CREATE TABLE `rental` (
 CREATE TABLE `speaker` (
 	`SerialNumber` varchar(50) primary key NOT NULL,
     `Model` varchar(50) NOT NULL,
-    `TrackerId` varchar(50),
+    `TrackerId` varchar(50) UNIQUE,
     `RentalId`char(36), 
     FOREIGN KEY (`TrackerId`) REFERENCES tracker (`HardwareId`),
     FOREIGN KEY (`RentalId`) REFERENCES rental (`Id`)
