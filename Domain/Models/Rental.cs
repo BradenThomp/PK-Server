@@ -17,5 +17,17 @@ namespace Domain.Models
         public Venue Destination { get; set; }
 
         public Guid Id { get; init; }
+
+        public Rental() { }
+
+        public Rental(IEnumerable<Speaker> rentedSpeakers, Customer customer, DateTime rentalDate, DateTime expectedReturnDate, Venue destination)
+        {
+            RentedSpeakers = rentedSpeakers;
+            Customer = customer;
+            RentalDate = rentalDate;
+            ExpectedReturnDate = expectedReturnDate;
+            Destination = destination;
+            Id = Guid.NewGuid();
+        }
     }
 }

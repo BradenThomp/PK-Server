@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using Application.Features.Rentals.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace Web_Api.Controllers
 {
@@ -13,11 +16,10 @@ namespace Web_Api.Controllers
             _mediator = mediator;
         }
         
-        /**([HttpPost]
-        public async Task<ActionResult> Create(CreateRentalCommand command)
+        [HttpPost]
+        public async Task<ActionResult<Guid>> Create(CreateRentalCommand command)
         {
-            await _mediator.Send(command);
-            return Ok();
-        }**/
+            return await _mediator.Send(command);
+        }
     }
 }

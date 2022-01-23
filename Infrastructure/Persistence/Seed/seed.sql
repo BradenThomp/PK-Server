@@ -31,9 +31,9 @@ CREATE TABLE `tracker` (
 );
 
 CREATE TABLE `rental` (
-	`id` char(36) primary key NOT NULL,
-	`rental_date` datetime NOT NULL,
-    `expected_return_date` datetime NOT NULL,
+	`Id` char(36) primary key NOT NULL,
+	`RentalDate` datetime NOT NULL,
+    `ExpectedReturnDate` datetime NOT NULL,
     `CustomerId` char(36) NOT NULL,
     `DestinationId` char(36) NOT NULL,
     FOREIGN KEY (`CustomerId`) REFERENCES customer (`Id`),
