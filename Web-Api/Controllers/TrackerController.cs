@@ -2,6 +2,7 @@
 using Application.Features.Tracking.Commands;
 using Application.Features.Tracking.Dtos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Web_Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TrackerController : ControllerBase
@@ -26,6 +28,7 @@ namespace Web_Api.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
         [HttpPut("[Action]/{macAddress}")]
         public async Task<ActionResult> Location(string macAddress, UpdateTrackerLocationCommand command)
         {
