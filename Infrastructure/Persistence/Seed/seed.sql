@@ -2,40 +2,47 @@ DROP DATABASE IF EXISTS `pk_rentals`;
 CREATE DATABASE `pk_rentals`;
 USE `pk_rentals`;
 
-CREATE TABLE `tracker_event_stream` (
-	`aggregate_id` varchar(50) NOT NULL,
-    `version` int NOT NULL,
-    `data` LONGTEXT NOT NULL,
-    `type` LONGTEXT NOT NULL,
-    PRIMARY KEY (`aggregate_id`, `version`)
+CREATE TABLE `customer` (
+	`Id` char(36) primary key NOT NULL,
+	`Name` varchar(50),
+    `Phone` varchar(50),
+    `Email` varchar(50)
 );
 
-CREATE TABLE `rental_event_stream` (
-	`aggregate_id` varchar(50) NOT NULL,
-    `version` int NOT NULL,
-    `data` LONGTEXT NOT NULL,
-    `type` LONGTEXT NOT NULL,
-    PRIMARY KEY (`aggregate_id`, `version`)
+CREATE TABLE `location` (
+	`Id` char(36) primary key NOT NULL,
+	`Longitude` double NOT NULL,
+    `Latitude` double NOT NULL
+);
+
+CREATE TABLE `venue` (
+	`Id` char(36) primary key NOT NULL,
+    `Address` varchar(50) NOT NULL,
+	`City` varchar(50) NOT NULL,
+	`Province` varchar(50) NOT NULL,
+	`PostalCode` varchar(50) NOT NULL
+);
+
+CREATE TABLE `tracker` (
+	`HardwareId` varchar(50) primary key NOT NULL,
+    `LastUpdate` datetime NOT NULL,
+    `LocationId` char(36) NOT NULL,
+    FOREIGN KEY (`LocationId`) REFERENCES location (`Id`)
+);
+
+CREATE TABLE `rental` (
+	`Id` char(36) primary key NOT NULL,
+	`CustomerId` char(36) NOT NULL,
+	`RentalDate` datetime NOT NULL,
+	`DestinationId` char(36) NOT NULL,
+    `ExpectedReturnDate` datetime NOT NULL
 );
 
 CREATE TABLE `speaker` (
 	`SerialNumber` varchar(50) primary key NOT NULL,
     `Model` varchar(50) NOT NULL,
-    `TrackerId` varchar(50)
-);
-
-CREATE TABLE `tracker_projection` (
-	`MACAddress` varchar(50) primary key NOT NULL,
-    `Longitude` double NOT NULL,
-    `Latitude` double NOT NULL,
-    `LastUpdate` datetime NOT NULL,
-    `SpeakerSerialNumber` varchar(50)
-);
-
-CREATE TABLE `rental_projection` (
-	`Id` char(36) primary key NOT NULL,
-    `CustomerId` char(36) NOT NULL,
-    `VenueId` char(36) NOT NULL,
-    `RentalDate` datetime NOT NULL,
-    `ExpectedReturnDate` datetime NOT NULL
+    `TrackerId` varchar(50) UNIQUE,
+    `RentalId`char(36), 
+    FOREIGN KEY (`TrackerId`) REFERENCES tracker (`HardwareId`),
+    FOREIGN KEY (`RentalId`) REFERENCES rental (`Id`)
 );

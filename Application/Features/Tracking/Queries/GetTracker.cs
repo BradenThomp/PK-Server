@@ -1,29 +1,27 @@
 ﻿using Application.Common.Repository;
-using Application.Features.Speaker.Dtos;
 using Application.Features.Tracking.Dtos;
-using Domain.Aggregates;
+using Domain.Models;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.Tracking
+namespace Application.Features.Tracking.Queries
 {
-    public record GetTrackerQuery(string MACAddress) : IRequest<TrackerDto>;
+    public record GetTrackerQuery(string HardwareId) : IRequest<TrackerDto>;
 
-    public class RegisterTrackerQueryHandler : IRequestHandler<GetTrackerQuery, TrackerDto>
+    public class GetTrackerQueryHandler : IRequestHandler<GetTrackerQuery, TrackerDto>
     {
-        private readonly IEventRepository _eventRepository;
+        private readonly ITrackerRepository _repo;
 
-        public RegisterTrackerQueryHandler(IEventRepository eventRepository)
+        public GetTrackerQueryHandler(ITrackerRepository repo)
         {
-            _eventRepository = eventRepository;
+            _repo = repo;
         }
 
         public async Task<TrackerDto> Handle(GetTrackerQuery request, CancellationToken cancellationToken)
         {
-            var tracker = await _eventRepository.GetByIdAsync<Tracker>(request.MACAddress);
-            var speakerDto = tracker.AssignedSpeaker is null ? null : new SpeakerDto(tracker.AssignedSpeaker.Model, tracker.AssignedSpeaker.SerialNumber);
-            return new TrackerDto(tracker.Id, tracker.Location.Longitude, tracker.Location.Latitude, tracker.LastUpdate, speakerDto);
+            var t = await _repo.GetAsync(request.HardwareId);
+            return new TrackerDto(t.HardwareId, t.LastUpdate, new LocationDto(t.Location.Longitude, t.Location.Latitude));
         }
     }
 }

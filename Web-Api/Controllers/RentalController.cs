@@ -1,7 +1,12 @@
-﻿using Application.Features.Rentals;
+﻿using Application.Features.Rentals.Commands;
+using Application.Features.Rentals.Dtos;
+using Application.Features.Rentals.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Web_Api.Controllers
@@ -18,10 +23,16 @@ namespace Web_Api.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult> Create(CreateRentalCommand command)
+        public async Task<ActionResult<Guid>> Create(CreateRentalCommand command)
         {
-            await _mediator.Send(command);
-            return Ok();
+            return await _mediator.Send(command);
+        }
+
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<RentalDto>>> GetAll()
+        {
+            var result = await _mediator.Send(new GetAllRentalsQuery());
+            return result.ToList();
         }
     }
 }

@@ -7,6 +7,8 @@ namespace Domain.Models
     {
         //public Location Cooridinates { get; set; }
 
+        public Guid Id { get; init; }
+
         public string Address { get; set; }
 
         public string City { get; set; }
@@ -15,7 +17,7 @@ namespace Domain.Models
 
         public string PostalCode { get; set; }
 
-        public Guid Id { get; init; }
+        public Venue() { }
 
         public Venue(string address, string city, string province, string postalCode)
         {
@@ -24,15 +26,6 @@ namespace Domain.Models
             Province = province;
             PostalCode = postalCode;
             Id = Guid.NewGuid();
-        }
-
-        public Venue(string address, string city, string province, string postalCode, Guid id)
-        {
-            Address = address;
-            City = city;
-            Province = province;
-            PostalCode = postalCode;
-            Id = id;
         }
     }
 }

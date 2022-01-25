@@ -9,17 +9,17 @@ namespace Application.Features.Speaker.Commands
 
     public class AddSpeakerCommandHandler : IRequestHandler<AddSpeakerCommand>
     {
-        private readonly ISpeakerRepository _repository;
+        private readonly ISpeakerRepository _repo;
 
-        public AddSpeakerCommandHandler(ISpeakerRepository repository)
+        public AddSpeakerCommandHandler(ISpeakerRepository repo)
         {
-            _repository = repository;
+            _repo = repo;
         }
 
         public async Task<Unit> Handle(AddSpeakerCommand request, CancellationToken cancellationToken)
         {
-            var speaker = new Domain.Models.Speaker(request.SerialNumber, request.Model);
-            await _repository.AddAsync(speaker);
+            var s = new Domain.Models.Speaker(request.SerialNumber, request.Model);
+            await _repo.AddAsync(s);
             return Unit.Value;
         }
     }

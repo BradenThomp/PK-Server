@@ -9,7 +9,7 @@ namespace Application.Common.Repository
 
         Task<IEnumerable<T>> GetAllAsync();
 
-        Task<int> AddAsync(T entity);
+        Task AddAsync(T entity);
 
         Task UpdateAsync(T entity);
 

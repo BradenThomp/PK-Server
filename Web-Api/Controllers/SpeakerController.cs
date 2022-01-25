@@ -28,6 +28,24 @@ namespace Web_Api.Controllers
             return Ok();
         }
 
+        /**[HttpPut("[action]/{serialNumber}")]
+        public async Task<ActionResult> Track(string serialNumber, TrackSpeakerCommand command)
+        {
+            if (command.SpeakerSerialNumber != serialNumber)
+            {
+                return BadRequest();
+            }
+            await _mediator.Send(command);
+
+            return NoContent();
+        }**/
+
+        [HttpGet("{serialNumber}")]
+        public async Task<ActionResult<SpeakerDto>> Get(string serialNumber)
+        {
+            return await _mediator.Send(new GetSpeakerQuery(serialNumber));
+        }
+
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<SpeakerDto>>> GetAll()
         {
