@@ -71,8 +71,8 @@ namespace Infrastructure.Persistence
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
             {
-                var updateQuery = $"UPDATE speaker SET TrackerId=@TrackerId WHERE SerialNumber=@SerialNumber";
-                await connection.ExecuteAsync(updateQuery, new { SerialNumber = entity.SerialNumber, TrackerId = entity.Tracker?.HardwareId });
+                var updateQuery = $"UPDATE speaker SET TrackerId=@TrackerId, RentalId=@RentalId WHERE SerialNumber=@SerialNumber";
+                await connection.ExecuteAsync(updateQuery, new { SerialNumber = entity.SerialNumber, TrackerId = entity.Tracker?.HardwareId, RentalId=entity.RentalId });
             }
         }
     }

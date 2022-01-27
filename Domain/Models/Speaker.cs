@@ -11,12 +11,26 @@ namespace Domain.Models
 
         public Tracker Tracker { get; set; }
 
+        public Guid? RentalId { get; set; }
+
         public Speaker() { }
 
         public Speaker(string serialNumber, string model)
         {
             SerialNumber = serialNumber;
             Model = model;
+            RentalId = null;
+        }
+
+        public ReturnedSpeaker Return()
+        {
+            if(RentalId is null)
+            {
+                throw new Exception("Speaker could not be returned as it is not currently rented.");
+            }
+            var result = new ReturnedSpeaker(SerialNumber, Model, RentalId.Value, DateTime.UtcNow);
+            RentalId = null;
+            return result;
         }
     }
 }

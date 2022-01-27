@@ -28,6 +28,13 @@ namespace Web_Api.Controllers
             return await _mediator.Send(command);
         }
 
+        [HttpPut("[action]")]
+        public async Task<ActionResult> Return(ReturnRentalCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
+        }
+
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<RentalDto>>> GetAll()
         {
