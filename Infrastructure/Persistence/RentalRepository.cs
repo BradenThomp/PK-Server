@@ -117,8 +117,8 @@ namespace Infrastructure.Persistence
 
                 foreach(var returnedRental in entity.ReturnedSpeakers)
                 {
-                    updateQuery = $"UPDATE speaker SET RentalId=@RentalId WHERE SerialNumber=@SerialNumber";
-                    await connection.ExecuteAsync(updateQuery, new { RentalId = (Guid?)null, SerialNumber = returnedRental.SerialNumber });
+                    updateQuery = $"UPDATE speaker SET RentalId=@RentalId, TrackerId=@TrackerId  WHERE SerialNumber=@SerialNumber";
+                    await connection.ExecuteAsync(updateQuery, new { RentalId = (Guid?)null, TrackerId=(Guid?)null, SerialNumber = returnedRental.SerialNumber });
 
                     var insertQuery = $"INSERT INTO returned_speaker(SerialNumber, Model, RentalId, DateReturned) VALUES(@SerialNumber, @Model, @RentalId, @DateReturned)";
                     await connection.ExecuteAsync(insertQuery, new { SerialNumber = returnedRental.SerialNumber, Model = returnedRental.Model, RentalId = returnedRental.RentalId, DateReturned = returnedRental.DateReturned});

@@ -29,6 +29,7 @@ namespace Domain.Models
                 throw new Exception("Speaker could not be returned as it is not currently rented.");
             }
             var result = new ReturnedSpeaker(SerialNumber, Model, RentalId.Value, DateTime.UtcNow);
+            Tracker = null;
             RentalId = null;
             return result;
         }
