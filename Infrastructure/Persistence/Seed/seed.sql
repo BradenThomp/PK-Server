@@ -44,7 +44,8 @@ CREATE TABLE `returned_speaker` (
     `Model` varchar(50) NOT NULL,
     `RentalId`char(36) NOT NULL,
     `DateReturned` datetime NOT NULL,
-    FOREIGN KEY (`RentalId`) REFERENCES rental (`Id`)
+    FOREIGN KEY (`RentalId`) REFERENCES rental (`Id`),
+    PRIMARY KEY (`SerialNumber`, `RentalId`)
 );
 
 CREATE TABLE `speaker` (
