@@ -35,7 +35,17 @@ CREATE TABLE `rental` (
 	`CustomerId` char(36) NOT NULL,
 	`RentalDate` datetime NOT NULL,
 	`DestinationId` char(36) NOT NULL,
-    `ExpectedReturnDate` datetime NOT NULL
+    `ExpectedReturnDate` datetime NOT NULL,
+    `DateReturned` datetime 
+);
+
+CREATE TABLE `returned_speaker` (
+	`SerialNumber` varchar(50) NOT NULL,
+    `Model` varchar(50) NOT NULL,
+    `RentalId`char(36) NOT NULL,
+    `DateReturned` datetime NOT NULL,
+    FOREIGN KEY (`RentalId`) REFERENCES rental (`Id`),
+    PRIMARY KEY (`SerialNumber`, `RentalId`)
 );
 
 CREATE TABLE `speaker` (

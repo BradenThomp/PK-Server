@@ -3,7 +3,9 @@ using Dapper;
 using Domain.Models;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
@@ -76,7 +78,7 @@ namespace Infrastructure.Persistence
 
                 foreach (var rental in rentals)
                 {
-                    rental.RentedSpeakers = await connection.QueryAsync<Speaker, Tracker, Location, Speaker>(
+                    rental.RentedSpeakers = (await connection.QueryAsync<Speaker, Tracker, Location, Speaker>(
                         $"SELECT * " +
                         $"FROM speaker s " +
                         $"LEFT JOIN tracker t ON s.TrackerId = t.HardwareId " +
@@ -87,21 +89,41 @@ namespace Infrastructure.Persistence
                                 tracker.Location = location;
                                 speaker.Tracker = tracker;
                             }
+                            speaker.RentalId = rental.Id;
                             return speaker;
-                        }, new { RentalId = rental.Id }, splitOn: "TrackerId,LocationId");
+                        }, new { RentalId = rental.Id }, splitOn: "TrackerId,LocationId")).AsList<Speaker>();
+
+                    rental.ReturnedSpeakers = (await connection.QueryAsync<ReturnedSpeaker>(
+                        $"SELECT * " +
+                        $"FROM returned_speaker s " +
+                        $"WHERE s.RentalId=@RentalId", new { RentalId = rental.Id })).AsList();
                 }
                 return rentals;
             }
         }
 
-        public override Task<Rental> GetAsync<Tid>(Tid id)
+        public override async Task<Rental> GetAsync<Tid>(Tid id)
         {
-            throw new System.NotImplementedException();
+            var all = await GetAllAsync();
+            return all.First(x => x.Id == id as Guid?);
         }
 
-        public override Task UpdateAsync(Rental entity)
+        public override async Task UpdateAsync(Rental entity)
         {
-            throw new System.NotImplementedException();
+            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            {
+                var updateQuery = $"UPDATE rental SET DateReturned=@DateReturned WHERE Id=@Id";
+                await connection.ExecuteAsync(updateQuery, new { DateReturned = entity.DateReturned, Id = entity.Id });
+
+                foreach(var returnedRental in entity.ReturnedSpeakers)
+                {
+                    updateQuery = $"UPDATE speaker SET RentalId=@RentalId, TrackerId=@TrackerId  WHERE SerialNumber=@SerialNumber";
+                    await connection.ExecuteAsync(updateQuery, new { RentalId = (Guid?)null, TrackerId=(Guid?)null, SerialNumber = returnedRental.SerialNumber });
+
+                    var insertQuery = $"INSERT IGNORE INTO returned_speaker(SerialNumber, Model, RentalId, DateReturned) VALUES(@SerialNumber, @Model, @RentalId, @DateReturned)";
+                    await connection.ExecuteAsync(insertQuery, new { SerialNumber = returnedRental.SerialNumber, Model = returnedRental.Model, RentalId = returnedRental.RentalId, DateReturned = returnedRental.DateReturned});
+                }
+            }
         }
     }
 }
