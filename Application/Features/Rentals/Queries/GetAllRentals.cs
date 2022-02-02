@@ -25,11 +25,11 @@ namespace Application.Features.Rentals.Queries
             var rentals = await _repo.GetAllAsync();
             return rentals.Select(r =>
             {
-                var c = new CustomerDto(r.Customer.Name, r.Customer.Phone, r.Customer.Email);
-                var d = new VenueDto(r.Destination.Address, r.Destination.City, r.Destination.Province, r.Destination.PostalCode);
-                var s = r.RentedSpeakers.Select(s => new SpeakerDto(s.SerialNumber, s.Model, new Tracking.Dtos.TrackerDto(s.Tracker.HardwareId, s.Tracker.LastUpdate, new Tracking.Dtos.LocationDto(s.Tracker.Location.Longitude, s.Tracker.Location.Latitude))));
-                var returnedSpeakers = r.ReturnedSpeakers.Select(s => new ReturnedSpeakerDto(s.SerialNumber, s.Model, s.DateReturned));
-                return new RentalDto(r.Id, r.RentalDate, r.ExpectedReturnDate, r.DateReturned, c, d, s, returnedSpeakers);
+                var customer = new CustomerDto(r.Customer.Name, r.Customer.Phone, r.Customer.Email);
+                var destination = new VenueDto(r.Destination.Address, r.Destination.City, r.Destination.Province, r.Destination.PostalCode);
+                var speakers = r.RentedSpeakers.Select(s => new RentedSpeakerDto(s.SerialNumber, s.Model, new Tracking.Dtos.TrackerDto(s.Tracker.HardwareId, s.Tracker.LastUpdate, new Tracking.Dtos.LocationDto(s.Tracker.Location.Longitude, s.Tracker.Location.Latitude)), null));
+                speakers = speakers.Concat(r.ReturnedSpeakers.Select(s => new RentedSpeakerDto(s.SerialNumber, s.Model, null, s.DateReturned)));
+                return new RentalDto(r.Id, r.RentalDate, r.ExpectedReturnDate, r.DateReturned, customer, destination, speakers);
             });
         }
     }
