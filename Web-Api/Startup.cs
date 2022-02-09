@@ -94,11 +94,10 @@ namespace Web_Api
 
             app.UseRouting();
 
-          
+            app.UseCors("NotificationPermission");
+
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseCors("NotificationPermission");
 
             app.UseEndpoints(endpoints =>
             {
