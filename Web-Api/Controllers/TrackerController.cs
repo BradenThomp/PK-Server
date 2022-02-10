@@ -21,6 +21,7 @@ namespace Web_Api.Controllers
             _mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Create(CreateTrackerCommand command)
         {
