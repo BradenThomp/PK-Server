@@ -3,5 +3,5 @@ using System;
 
 namespace Application.Features.Map.Dtos
 {
-    public record MapPlotPointDto(Guid RentalId, string CustomerName, String SpeakerSerialNumber, string SpeakerModel, DateTime LastUpdate, LocationDto Location);
+    public record MapPlotPointDto(Guid RentalId, string CustomerName, String SpeakerSerialNumber, string SpeakerModel, TrackerDto Tracker);
 }

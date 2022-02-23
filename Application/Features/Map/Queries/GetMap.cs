@@ -27,7 +27,7 @@ namespace Application.Features.Map.Queries
             List<MapPlotPointDto> result = new List<MapPlotPointDto>();
             foreach (var rental in openRentals)
             {
-                var plotPoints = rental.RentedSpeakers.Select(s => new MapPlotPointDto(rental.Id, rental.Customer.Name, s.SerialNumber, s.Model, s.Tracker.LastUpdate, new LocationDto(s.Tracker.Location.Longitude, s.Tracker.Location.Latitude)));
+                var plotPoints = rental.RentedSpeakers.Select(s => new MapPlotPointDto(rental.Id, rental.Customer.Name, s.SerialNumber, s.Model, new TrackerDto(s.Tracker.HardwareId, s.Tracker.LastUpdate, new LocationDto(s.Tracker.Location.Longitude, s.Tracker.Location.Latitude))));
                 result.AddRange(plotPoints);
             }
             return result;
