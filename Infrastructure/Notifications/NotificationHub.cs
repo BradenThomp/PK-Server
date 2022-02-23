@@ -16,7 +16,8 @@ namespace Infrastructure.Notifications
         public async Task Notify(INotification notification)
         {
             var json = JsonConvert.SerializeObject(notification);
-            await _context.Clients.All.SendAsync("Notification", json);
+            var name = notification.GetType().Name;
+            await _context.Clients.All.SendAsync(name, json);
         }
 
     }

@@ -15,13 +15,15 @@ namespace Domain.Models
 
         public DateTime RentalDate { get; set; }
 
-        public DateTime DateReturned { get; set; }
+        public DateTime? DateReturned { get; set; }
 
         public DateTime ExpectedReturnDate { get; set; }
 
         public Venue Destination { get; set; }
 
         public Guid Id { get; init; }
+
+        public bool IsReturned => DateReturned != null;
 
         public Rental() { }
 
@@ -33,6 +35,7 @@ namespace Domain.Models
             ExpectedReturnDate = expectedReturnDate;
             Destination = destination;
             Id = Guid.NewGuid();
+            DateReturned = null;
 
             foreach(var rentedSpeaker in rentedSpeakers)
             {
@@ -40,11 +43,13 @@ namespace Domain.Models
             }
         }
 
-        public void ReturnSpeakers(IEnumerable<string> returnedSerialNumbers)
+        public IEnumerable<Tracker> ReturnSpeakers(IEnumerable<string> returnedSerialNumbers)
         {
+            var freedTrackers = new List<Tracker>();
             foreach(var serial in returnedSerialNumbers)
             {
                 var speaker = RentedSpeakers.First(s => s.SerialNumber == serial);
+                freedTrackers.Add(speaker.Tracker);
                 if (speaker is null)
                 {
                     throw new InvalidOperationException($"Speaker being returned is not part of rental {Id}");
@@ -57,6 +62,7 @@ namespace Domain.Models
                     DateReturned = DateTime.UtcNow;
                 }
             }
+            return freedTrackers;
         }
 
     }

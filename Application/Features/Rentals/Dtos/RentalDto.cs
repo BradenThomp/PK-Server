@@ -4,5 +4,5 @@ using System.Collections.Generic;
 
 namespace Application.Features.Rentals.Dtos
 {
-    public record RentalDto(Guid Id, DateTime RentalDate, DateTime ExpectedReturnDate, DateTime DateReturned, CustomerDto Customer, VenueDto Venue, IEnumerable<RentedSpeakerDto> Speakers);
+    public record RentalDto(Guid Id, DateTime RentalDate, DateTime ExpectedReturnDate, DateTime? DateReturned, CustomerDto Customer, VenueDto Venue, IEnumerable<RentedSpeakerDto> Speakers);
 }
