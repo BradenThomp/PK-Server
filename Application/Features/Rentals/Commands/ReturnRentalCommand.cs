@@ -1,7 +1,10 @@
-﻿using Application.Common.Repository;
+﻿using Application.Common.Notifications;
+using Application.Common.Repository;
+using Application.Features.Rentals.Notifications;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,16 +16,20 @@ namespace Application.Features.Rentals.Commands
     {
         private readonly IRentalRepository _rentalRepo;
 
-        public ReturnRentalCommandHandler(IRentalRepository rentalRepo)
+        private readonly INotificationService _notificationService;
+
+        public ReturnRentalCommandHandler(IRentalRepository rentalRepo, INotificationService notificationService)
         {
             _rentalRepo = rentalRepo;
+            _notificationService = notificationService;
         }
 
         public async Task<Unit> Handle(ReturnRentalCommand request, CancellationToken cancellationToken)
         {
             var rental = await _rentalRepo.GetAsync(request.RentalId);
-            rental.ReturnSpeakers(request.ReturnedSpeakerSerialNumbers);
+            var freedTrackers = rental.ReturnSpeakers(request.ReturnedSpeakerSerialNumbers);
             await _rentalRepo.UpdateAsync(rental);
+            await _notificationService.Notify(new RentalReturnedNotification(freedTrackers.Select(t => t.HardwareId)));
             return Unit.Value;
         }
     }
