@@ -25,5 +25,19 @@ namespace Domain.Test.Models
         {
             Assert.Throws<InvalidOperationException>(() => new Location(-180, 90.01));
         }
+
+        [Test]
+        public void ShouldThrowValidationException_LongitudeOutOfExpectedRange()
+        {
+            var loc = new Location(0, 0);
+            Assert.Throws<InvalidOperationException>(() => loc.Longitude = 190);
+        }
+
+        [Test]
+        public void ShouldThrowValidationException_LatitudeOutOfExpectedRange()
+        {
+            var loc = new Location(0, 0);
+            Assert.Throws<InvalidOperationException>(() => loc.Latitude = 100);
+        }
     }
 }
