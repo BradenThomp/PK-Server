@@ -1,8 +1,13 @@
-﻿using Application.Common.Repository;
+﻿using Application.Common.Notifications;
+using Application.Common.Repository;
+using Application.Features.Map.Dtos;
 using Application.Features.Rentals.Dtos;
+using Application.Features.Rentals.Notifications;
+using Application.Features.Tracking.Dtos;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,12 +20,14 @@ namespace Application.Features.Rentals.Commands
         private readonly ITrackerRepository _trackerRepo;
         private readonly ISpeakerRepository _speakerRepo;
         private readonly IRentalRepository _rentalRepo;
+        private readonly INotificationService _notificationService;
 
-        public CreateRentalCommandHandler(IRentalRepository rentalRepo, ISpeakerRepository speakerRepo, ITrackerRepository trackerRepo)
+        public CreateRentalCommandHandler(IRentalRepository rentalRepo, ISpeakerRepository speakerRepo, ITrackerRepository trackerRepo, INotificationService notificationService)
         {
             _rentalRepo = rentalRepo;
             _speakerRepo = speakerRepo;
             _trackerRepo = trackerRepo;
+            _notificationService = notificationService;
         }
 
         public async Task<Guid> Handle(CreateRentalCommand request, CancellationToken cancellationToken)
@@ -39,6 +46,8 @@ namespace Application.Features.Rentals.Commands
             var customer = new Domain.Models.Customer(c.Name, c.Phone, c.Email);
             var rental = new Domain.Models.Rental(rentedSpeakers, customer, request.RentalDate, request.ExpectedReturnDate, destination);
             await _rentalRepo.AddAsync(rental);
+            var trackersToMap = rental.RentedSpeakers.Select(s => new MapPlotPointDto(rental.Id, rental.Customer.Name, s.SerialNumber, s.Model, new TrackerDto(s.Tracker.HardwareId, s.Tracker.LastUpdate, new LocationDto(s.Tracker.Location.Longitude, s.Tracker.Location.Latitude))));
+            await _notificationService.Notify(new RentalCreatedNotification(trackersToMap));
             return rental.Id;
         }
     }
