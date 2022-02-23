@@ -1,4 +1,5 @@
-﻿using Domain.Common.Models;
+﻿using Domain.Common.Exceptions;
+using Domain.Common.Models;
 using System;
 
 namespace Domain.Models
@@ -12,7 +13,7 @@ namespace Domain.Models
             { 
                 if (value < -180 || value > 180)
                 {
-                    throw new InvalidOperationException("Longitude must lie in range of -180 to 180 degrees.");
+                    throw new DomainValidationException("Longitude must lie in range of -180 to 180 degrees.");
                 }
                 _longitude = value;
             } 
@@ -26,7 +27,7 @@ namespace Domain.Models
             {
                 if (value < -90 || value > 90)
                 {
-                    throw new InvalidOperationException("Latitude must lie in range of -90 to 90 degrees.");
+                    throw new DomainValidationException("Latitude must lie in range of -90 to 90 degrees.");
                 }
                 _latitude = value;
             }
