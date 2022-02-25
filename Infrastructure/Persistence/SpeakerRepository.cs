@@ -41,6 +41,7 @@ namespace Infrastructure.Persistence
                         {
                             tracker.Location = location;
                             speaker.Tracker = tracker;
+                            tracker.SpeakerSerialNumber = speaker.SerialNumber;
                         }
                         return speaker;
                     }, splitOn: "TrackerId,LocationId");
@@ -61,6 +62,7 @@ namespace Infrastructure.Persistence
                         {
                             tracker.Location = location;
                             speaker.Tracker = tracker;
+                            tracker.SpeakerSerialNumber = speaker.SerialNumber;
                         }
                         return speaker;
                     }, new { SerialNumber = id}, splitOn: "TrackerId,LocationId")).Single();

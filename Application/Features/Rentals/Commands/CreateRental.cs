@@ -37,7 +37,7 @@ namespace Application.Features.Rentals.Commands
             {
                 var t = await _trackerRepo.GetAsync(m.TrackerHardwareId);
                 var s = await _speakerRepo.GetAsync(m.SpeakerSerialNumber);
-                s.Tracker = t;
+                s.AttachTracker(t);
                 rentedSpeakers.Add(s);
             }
             var d = request.Destination;

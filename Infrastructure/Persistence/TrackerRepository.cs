@@ -38,7 +38,7 @@ namespace Infrastructure.Persistence
                 return await connection.QueryAsync<Tracker, Location, Tracker>(
                     $"SELECT * " +
                     $"FROM tracker t " +
-                    $"INNER JOIN location l ON t.LocationId = l.Id", (tracker, location) => {
+                    $"INNER JOIN location l ON l.Id = t.LocationId", (tracker, location) => {
                         tracker.Location = location;
                         return tracker;
                     }, splitOn: "LocationId");
@@ -52,7 +52,7 @@ namespace Infrastructure.Persistence
                 return (await connection.QueryAsync<Tracker, Location, Tracker>(
                     $"SELECT * " +
                     $"FROM tracker t " +
-                    $"INNER JOIN location l ON t.LocationId = l.Id " +
+                    $"INNER JOIN location l ON l.Id = t.LocationId " +
                     $"WHERE t.HardwareId = @HardwareId", (tracker, location) => {
                         tracker.Location = location;
                         return tracker;

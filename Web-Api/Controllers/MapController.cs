@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Web_Api.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MapController : ControllerBase

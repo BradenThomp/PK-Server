@@ -27,7 +27,10 @@ namespace Application.Features.Tracking.Commands
             var t = await _repo.GetAsync(request.HardwareId);
             t.UpdateLocation(request.Longitude, request.Latitude);
             await _repo.UpdateAsync(t);
-            await _notifications.Notify(new LocationUpdatedNotification(new TrackerDto(t.HardwareId, t.LastUpdate, new LocationDto(t.Location.Longitude, t.Location.Latitude))));
+            if(!string.IsNullOrEmpty(t.SpeakerSerialNumber))
+            {
+                await _notifications.Notify(new LocationUpdatedNotification(t.SpeakerSerialNumber, new TrackerDto(t.HardwareId, t.LastUpdate, new LocationDto(t.Location.Longitude, t.Location.Latitude))));
+            }
             return Unit.Value;
         }
     }

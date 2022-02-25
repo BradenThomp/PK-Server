@@ -23,7 +23,7 @@ namespace Application.Features.Speaker.Commands
         {
             var t = await _trackerRepo.GetAsync(request.TrackerId);
             var s = await _speakerRepo.GetAsync(request.SpeakerSerialNumber);
-            s.Tracker = t;
+            s.AttachTracker(t);
             await _speakerRepo.UpdateAsync(s);
             return Unit.Value;
         }

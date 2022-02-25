@@ -43,13 +43,11 @@ namespace Domain.Models
             }
         }
 
-        public IEnumerable<Tracker> ReturnSpeakers(IEnumerable<string> returnedSerialNumbers)
+        public void ReturnSpeakers(IEnumerable<string> returnedSerialNumbers)
         {
-            var freedTrackers = new List<Tracker>();
             foreach(var serial in returnedSerialNumbers)
             {
                 var speaker = RentedSpeakers.First(s => s.SerialNumber == serial);
-                freedTrackers.Add(speaker.Tracker);
                 if (speaker is null)
                 {
                     throw new InvalidOperationException($"Speaker being returned is not part of rental {Id}");
@@ -62,7 +60,6 @@ namespace Domain.Models
                     DateReturned = DateTime.UtcNow;
                 }
             }
-            return freedTrackers;
         }
 
     }
