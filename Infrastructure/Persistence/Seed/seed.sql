@@ -26,6 +26,7 @@ CREATE TABLE `venue` (
 CREATE TABLE `tracker` (
 	`HardwareId` varchar(50) primary key NOT NULL,
     `LastUpdate` datetime NOT NULL,
+	`SpeakerSerialNumber` varchar(50) DEFAULT NULL,
     `LocationId` char(36) NOT NULL,
     FOREIGN KEY (`LocationId`) REFERENCES location (`Id`)
 );

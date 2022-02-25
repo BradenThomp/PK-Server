@@ -51,6 +51,9 @@ namespace Infrastructure.Persistence
                 {
                     var updateQuery = $"UPDATE speaker SET TrackerId=@TrackerId, RentalId=@RentalId WHERE SerialNumber=@SerialNumber";
                     await connection.ExecuteAsync(updateQuery, new { SerialNumber = speaker.SerialNumber, RentalId=entity.Id, TrackerId = speaker.Tracker?.HardwareId });
+
+                    updateQuery = $"UPDATE tracker SET SpeakerSerialNumber=@SerialNumber WHERE HardwareId=@TrackerId";
+                    await connection.ExecuteAsync(updateQuery, new { SerialNumber = speaker.SerialNumber, TrackerId = speaker.Tracker?.HardwareId });
                 }
             }
         }
@@ -88,6 +91,7 @@ namespace Infrastructure.Persistence
                             {
                                 tracker.Location = location;
                                 speaker.Tracker = tracker;
+                                tracker.SpeakerSerialNumber = speaker.SerialNumber;
                             }
                             speaker.RentalId = rental.Id;
                             return speaker;
@@ -119,6 +123,9 @@ namespace Infrastructure.Persistence
                 {
                     updateQuery = $"UPDATE speaker SET RentalId=@RentalId, TrackerId=@TrackerId  WHERE SerialNumber=@SerialNumber";
                     await connection.ExecuteAsync(updateQuery, new { RentalId = (Guid?)null, TrackerId=(Guid?)null, SerialNumber = returnedRental.SerialNumber });
+
+                    updateQuery = $"UPDATE tracker SET SpeakerSerialNumber=@NewSerialNumber WHERE SpeakerSerialNumber=@OldSerialNumber";
+                    await connection.ExecuteAsync(updateQuery, new { NewSerialNumber = (string)null, OldSerialNumber = returnedRental.SerialNumber });
 
                     var insertQuery = $"INSERT IGNORE INTO returned_speaker(SerialNumber, Model, RentalId, DateReturned) VALUES(@SerialNumber, @Model, @RentalId, @DateReturned)";
                     await connection.ExecuteAsync(insertQuery, new { SerialNumber = returnedRental.SerialNumber, Model = returnedRental.Model, RentalId = returnedRental.RentalId, DateReturned = returnedRental.DateReturned});

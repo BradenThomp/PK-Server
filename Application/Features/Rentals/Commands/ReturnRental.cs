@@ -4,7 +4,6 @@ using Application.Features.Rentals.Notifications;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,9 +26,9 @@ namespace Application.Features.Rentals.Commands
         public async Task<Unit> Handle(ReturnRentalCommand request, CancellationToken cancellationToken)
         {
             var rental = await _rentalRepo.GetAsync(request.RentalId);
-            var freedTrackers = rental.ReturnSpeakers(request.ReturnedSpeakerSerialNumbers);
+            rental.ReturnSpeakers(request.ReturnedSpeakerSerialNumbers);
             await _rentalRepo.UpdateAsync(rental);
-            await _notificationService.Notify(new RentalReturnedNotification(freedTrackers.Select(t => t.HardwareId)));
+            await _notificationService.Notify(new RentalReturnedNotification(request.ReturnedSpeakerSerialNumbers));
             return Unit.Value;
         }
     }

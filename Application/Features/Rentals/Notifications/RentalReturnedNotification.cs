@@ -3,5 +3,5 @@ using System.Collections.Generic;
 
 namespace Application.Features.Rentals.Notifications
 {
-    public record RentalReturnedNotification(IEnumerable<string> TrackerHardwareIds) : INotification;
+    public record RentalReturnedNotification(IEnumerable<string> ReturnedTrackerIds) : INotification;
 }

@@ -11,6 +11,8 @@ namespace Domain.Models
 
         public Location Location { get; set; }
 
+        public string SpeakerSerialNumber { get; set; }
+
         public void UpdateLocation(double longitude, double latitude)
         {
             Location.Longitude = longitude;
