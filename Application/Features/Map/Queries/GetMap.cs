@@ -24,6 +24,12 @@ namespace Application.Features.Map.Queries
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets a list of all <see cref="MapPlotPointDto"/>'s to build a map in the user interface.
+        /// </summary>
+        /// <param name="request">The query wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the task.</param>
+        /// <returns>The query result.</returns>
         public async Task<IEnumerable<MapPlotPointDto>> Handle(GetMapQuery request, CancellationToken cancellationToken)
         {
             var rentals = await _repo.GetAllAsync();

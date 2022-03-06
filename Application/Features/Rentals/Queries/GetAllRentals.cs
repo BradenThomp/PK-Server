@@ -1,6 +1,5 @@
 ﻿using Application.Common.Repository;
 using Application.Features.Rentals.Dtos;
-using Application.Features.Speaker.Dtos;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -24,6 +23,12 @@ namespace Application.Features.Rentals.Queries
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets a list of all <see cref="RentalDto"/>'s in the system.
+        /// </summary>
+        /// <param name="request">The query wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the task.</param>
+        /// <returns>The query result.</returns>
         public async Task<IEnumerable<RentalDto>> Handle(GetAllRentalsQuery request, CancellationToken cancellationToken)
         {
             var rentals = await _repo.GetAllAsync();

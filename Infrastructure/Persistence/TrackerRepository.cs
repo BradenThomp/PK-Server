@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
 {
+    /// <inheritdoc/>
     public class TrackerRepository : BaseCRUDRepository<Tracker>, ITrackerRepository
     {
         public TrackerRepository(IConfiguration configuration) : base(configuration) { }
 
+        /// <inheritdoc/>
         public override async Task AddAsync(Tracker entity)
         {
             await Commit(async con =>
@@ -26,11 +28,13 @@ namespace Infrastructure.Persistence
             });
         }
 
+        /// <inheritdoc/>
         public override Task DeleteAsync(Tracker entity)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public override async Task<IEnumerable<Tracker>> GetAllAsync()
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
@@ -45,6 +49,7 @@ namespace Infrastructure.Persistence
             }
         }
 
+        /// <inheritdoc/>
         public override async Task<Tracker> GetAsync<Tid>(Tid id)
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
@@ -60,6 +65,7 @@ namespace Infrastructure.Persistence
             }
         }
 
+        /// <inheritdoc/>
         public override async Task UpdateAsync(Tracker entity)
         {
             await Commit(async con =>

@@ -22,6 +22,12 @@ namespace Application.Features.Tracking.Queries
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets all trackers in the system.
+        /// </summary>
+        /// <param name="request">The query wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the task.</param>
+        /// <returns>A list of all trackers.</returns>
         public async Task<IEnumerable<TrackerDto>> Handle(GetAllTrackersQuery request, CancellationToken cancellationToken)
         {
             var trackers = await _repo.GetAllAsync();

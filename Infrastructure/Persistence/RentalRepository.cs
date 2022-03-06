@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
 {
+    /// <inheritdoc/>
     public class RentalRepository : BaseCRUDRepository<Rental>, IRentalRepository
     {
         public RentalRepository(IConfiguration configuration) : base(configuration) { }
 
+        /// <inheritdoc/>
         public override async Task AddAsync(Rental entity) 
         {
             await Commit(async (con) =>
@@ -58,11 +60,13 @@ namespace Infrastructure.Persistence
             });
         }
 
+        /// <inheritdoc/>
         public override Task DeleteAsync(Rental entity)
         {
             throw new System.NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public override async Task<IEnumerable<Rental>> GetAllAsync()
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
@@ -106,12 +110,14 @@ namespace Infrastructure.Persistence
             }
         }
 
+        /// <inheritdoc/>
         public override async Task<Rental> GetAsync<Tid>(Tid id)
         {
             var all = await GetAllAsync();
             return all.First(x => x.Id == id as Guid?);
         }
 
+        /// <inheritdoc/>
         public override async Task UpdateAsync(Rental entity)
         {
             await Commit(async con =>

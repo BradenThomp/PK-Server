@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Notifications
 {
+    /// <inheritdoc/>
     public class NotificationHub : Hub, INotificationService
     {
         private readonly IHubContext<NotificationHub> _context;
@@ -13,6 +14,7 @@ namespace Infrastructure.Notifications
             _context = context;
         }
 
+        /// <inheritdoc/>
         public async Task Notify(INotification notification)
         {
             var json = JsonConvert.SerializeObject(notification);

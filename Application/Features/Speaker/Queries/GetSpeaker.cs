@@ -20,6 +20,12 @@ namespace Application.Features.Speaker.Queries
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets a speaker with the given serial number.
+        /// </summary>
+        /// <param name="request">The query wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the task.</param>
+        /// <returns>The requested speaker.</returns>
         public async Task<SpeakerDto> Handle(GetSpeakerQuery request, CancellationToken cancellationToken)
         {
             var s = await _repository.GetAsync(request.SerialNumber);

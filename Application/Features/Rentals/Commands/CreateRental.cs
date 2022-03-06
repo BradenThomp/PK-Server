@@ -30,6 +30,12 @@ namespace Application.Features.Rentals.Commands
             _notificationService = notificationService;
         }
 
+        /// <summary>
+        /// Creates a new rental and saves it to the repository.
+        /// </summary>
+        /// <param name="request">The command wrapper.</param>
+        /// <param name="cancellationToken">Token to cancell the command.</param>
+        /// <returns>The id of the created rental.</returns>
         public async Task<Guid> Handle(CreateRentalCommand request, CancellationToken cancellationToken)
         {
             var rentedSpeakers = new List<Domain.Models.Speaker>();

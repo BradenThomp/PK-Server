@@ -3,6 +3,9 @@ using System;
 
 namespace Domain.Models
 {
+    /// <summary>
+    /// Represents a customer that has rented speakers.
+    /// </summary>
     public class Customer : IModel
     {
         public Guid Id { get; init; }

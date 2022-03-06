@@ -18,6 +18,12 @@ namespace Application.Features.Tracking.Commands
             _repo = repo;
         }
 
+        /// <summary>
+        /// Adds a new tracker to the repository.
+        /// </summary>
+        /// <param name="request">The command wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the command.</param>
+        /// <returns>Empty value if return is successful.</returns>
         public async Task<Unit> Handle(CreateTrackerCommand request, CancellationToken cancellationToken)
         {
             var tracker = new Tracker
