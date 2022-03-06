@@ -1,5 +1,4 @@
-﻿using Application.Features.Map.Dtos;
-using Application.Features.Rentals.Dtos;
+﻿using Application.Features.Rentals.Dtos;
 using Application.Features.Speaker.Dtos;
 using Application.Features.Tracking.Dtos;
 using AutoMapper;

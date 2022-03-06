@@ -4,10 +4,7 @@ using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
@@ -19,6 +16,27 @@ namespace Infrastructure.Persistence
         public BaseCRUDRepository(IConfiguration configuration)
         {
             _configuration = configuration;
+        }
+
+        protected async Task Commit(Func<DbConnection, Task> func)
+        {
+            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            {
+                await connection.OpenAsync();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        await func.Invoke(connection);
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
 
         public abstract Task AddAsync(T entity);
