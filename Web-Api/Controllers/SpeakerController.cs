@@ -12,6 +12,7 @@ namespace Web_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SpeakerController : ControllerBase
     {
         private readonly IMediator _mediator;

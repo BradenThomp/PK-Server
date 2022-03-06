@@ -4,7 +4,7 @@ using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Features.Tracking.Dtos;
+using AutoMapper;
 
 namespace Application.Features.Speaker.Queries
 {
@@ -13,27 +13,18 @@ namespace Application.Features.Speaker.Queries
     public class GetAllSpeakersQueryHandler : IRequestHandler<GetAllSpeakersQuery, IEnumerable<SpeakerDto>>
     {
         private readonly ISpeakerRepository _repository;
+        private readonly IMapper _mapper;
 
-        public GetAllSpeakersQueryHandler(ISpeakerRepository repository)
+        public GetAllSpeakersQueryHandler(ISpeakerRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<SpeakerDto>> Handle(GetAllSpeakersQuery request, CancellationToken cancellationToken)
         {
             var speakers = await _repository.GetAllAsync();
-            var result = new List<SpeakerDto>();
-            foreach(var s in speakers)
-            {
-                var trackerDto = (TrackerDto)null;
-                var t = s.Tracker;
-                if(t is not null)
-                {
-                    trackerDto = new TrackerDto(t.HardwareId, t.LastUpdate, new LocationDto(t.Location.Longitude, t.Location.Latitude));
-                }
-                result.Add(new SpeakerDto(s.Model, s.SerialNumber, trackerDto));
-            }
-            return result;
+            return _mapper.Map<IEnumerable<Domain.Models.Speaker>, IEnumerable<SpeakerDto>>(speakers);
         }
     }
 }

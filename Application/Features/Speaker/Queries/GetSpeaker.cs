@@ -1,6 +1,6 @@
 ﻿using Application.Common.Repository;
 using Application.Features.Speaker.Dtos;
-using Application.Features.Tracking.Dtos;
+using AutoMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,22 +12,18 @@ namespace Application.Features.Speaker.Queries
     public class GetSpeakerQueryQueryHandler : IRequestHandler<GetSpeakerQuery, SpeakerDto>
     {
         private readonly ISpeakerRepository _repository;
+        private readonly IMapper _mapper;
 
-        public GetSpeakerQueryQueryHandler(ISpeakerRepository repository)
+        public GetSpeakerQueryQueryHandler(ISpeakerRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<SpeakerDto> Handle(GetSpeakerQuery request, CancellationToken cancellationToken)
         {
             var s = await _repository.GetAsync(request.SerialNumber);
-            var t = s.Tracker;
-            var trackerDto = (TrackerDto)null;
-            if (t is not null)
-            {
-                trackerDto = new TrackerDto(t.HardwareId, t.LastUpdate, new LocationDto(t.Location.Longitude, t.Location.Latitude));
-            }
-            return new SpeakerDto(s.Model, s.SerialNumber, trackerDto);
+            return _mapper.Map<Domain.Models.Speaker, SpeakerDto>(s);
         }
     }
 }
