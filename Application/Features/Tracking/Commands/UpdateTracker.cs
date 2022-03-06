@@ -22,6 +22,12 @@ namespace Application.Features.Tracking.Commands
             _notifications = notifications;
         }
 
+        /// <summary>
+        /// Updates the tracker in the repository.
+        /// </summary>
+        /// <param name="request">The command wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the command.</param>
+        /// <returns>Empty value if return is successful.</returns>
         public async Task<Unit> Handle(UpdateTrackerCommand request, CancellationToken cancellationToken)
         {
             var t = await _repo.GetAsync(request.HardwareId);

@@ -3,6 +3,9 @@ using System;
 
 namespace Domain.Models
 {
+    /// <summary>
+    /// Represents a venue that is expecting a rental.
+    /// </summary>
     public class Venue : IModel
     {
         //public Location Cooridinates { get; set; }

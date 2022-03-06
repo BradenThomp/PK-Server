@@ -23,6 +23,12 @@ namespace Application.Features.Rentals.Commands
             _notificationService = notificationService;
         }
 
+        /// <summary>
+        /// Returns speakers of a rental. Does not have to return all speakers, the return can be partial.
+        /// </summary>
+        /// <param name="request">The command wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the command.</param>
+        /// <returns>Empty value if return is successful.</returns>
         public async Task<Unit> Handle(ReturnRentalCommand request, CancellationToken cancellationToken)
         {
             var rental = await _rentalRepo.GetAsync(request.RentalId);

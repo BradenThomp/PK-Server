@@ -9,11 +9,12 @@ using System.Linq;
 
 namespace Infrastructure.Persistence
 {
+    /// <inheritdoc/>
     public class SpeakerRepository : BaseCRUDRepository<Speaker>, ISpeakerRepository
     {
-
         public SpeakerRepository(IConfiguration configuration) : base(configuration) { }
 
+        /// <inheritdoc/>
         public override async Task AddAsync(Speaker entity)
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
@@ -23,11 +24,13 @@ namespace Infrastructure.Persistence
             }
         }
 
+        /// <inheritdoc/>
         public override Task DeleteAsync(Speaker entity)
         {
             throw new System.NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public override async Task<IEnumerable<Speaker>> GetAllAsync()
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
@@ -48,6 +51,7 @@ namespace Infrastructure.Persistence
             }
         }
 
+        /// <inheritdoc/>
         public override async Task<Speaker> GetAsync<Tid>(Tid id)
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
@@ -69,6 +73,7 @@ namespace Infrastructure.Persistence
             }
         }
 
+        /// <inheritdoc/>
         public override async Task UpdateAsync(Speaker entity)
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))

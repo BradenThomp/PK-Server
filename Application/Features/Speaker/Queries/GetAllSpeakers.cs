@@ -21,6 +21,12 @@ namespace Application.Features.Speaker.Queries
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets all speakers in the system.
+        /// </summary>
+        /// <param name="request">The query wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the task.</param>
+        /// <returns>The a list of all speakers in the system.</returns>
         public async Task<IEnumerable<SpeakerDto>> Handle(GetAllSpeakersQuery request, CancellationToken cancellationToken)
         {
             var speakers = await _repository.GetAllAsync();

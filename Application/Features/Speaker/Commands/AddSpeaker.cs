@@ -16,6 +16,12 @@ namespace Application.Features.Speaker.Commands
             _repo = repo;
         }
 
+        /// <summary>
+        /// Adds a speaker to the repository.
+        /// </summary>
+        /// <param name="request">The command wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the command.</param>
+        /// <returns>Empty value if return is successful.</returns>
         public async Task<Unit> Handle(AddSpeakerCommand request, CancellationToken cancellationToken)
         {
             var s = new Domain.Models.Speaker(request.SerialNumber, request.Model);

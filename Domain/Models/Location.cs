@@ -4,6 +4,9 @@ using System;
 
 namespace Domain.Models
 {               
+    /// <summary>
+    /// Represents a location using longitude and latitude coordinates.
+    /// </summary>
     public class Location : IModel
     {
         private double _longitude;

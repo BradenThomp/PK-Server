@@ -4,14 +4,29 @@ using System;
 
 namespace Domain.Models
 {
+    /// <summary>
+    /// Represents a speaker that can be rented by customers.
+    /// </summary>
     public class Speaker : IModel
     {
+        /// <summary>
+        /// The unique serial number of the speaker.
+        /// </summary>
         public string SerialNumber { get; init; }
 
+        /// <summary>
+        /// The model of the speaker.
+        /// </summary>
         public string Model { get; init; }
 
+        /// <summary>
+        /// The tracker being used to track the speaker when it is rented.
+        /// </summary>
         public Tracker Tracker { get; set; }
 
+        /// <summary>
+        /// The id of the rental that the speaker currently belongs to.
+        /// </summary>
         public Guid? RentalId { get; set; }
 
         public Speaker() { }
@@ -23,6 +38,10 @@ namespace Domain.Models
             RentalId = null;
         }
 
+        /// <summary>
+        /// Attaches a tracker to the speaker if the speaker is not currently rented.
+        /// </summary>
+        /// <param name="tracker">The tracker to attach.</param>
         public void AttachTracker(Tracker tracker)
         {
             if (!string.IsNullOrEmpty(tracker.SpeakerSerialNumber))
@@ -37,6 +56,10 @@ namespace Domain.Models
             Tracker.SpeakerSerialNumber = SerialNumber;
         }
 
+        /// <summary>
+        /// Returns the speaker if it is currently rented.
+        /// </summary>
+        /// <returns>A returned speaker record.</returns>
         public ReturnedSpeaker Return()
         {
             if(RentalId is null)

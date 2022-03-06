@@ -2,7 +2,9 @@
 
 namespace Application.Common.Repository
 {
-    public interface ITrackerRepository : ICRUDRepository<Tracker>
-    {
-    }
+    /// <summary>
+    /// A CRUD repository for the <see cref="Tracker" entity/>.
+    /// <inheritdoc/>
+    /// </summary>
+    public interface ITrackerRepository : ICRUDRepository<Tracker>{}
 }

@@ -20,6 +20,12 @@ namespace Application.Features.Tracking.Queries
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets a tracker with the given id.
+        /// </summary>
+        /// <param name="request">The query wrapper.</param>
+        /// <param name="cancellationToken">Token to cancel the task.</param>
+        /// <returns>The tracker with the given id.</returns>
         public async Task<TrackerDto> Handle(GetTrackerQuery request, CancellationToken cancellationToken)
         {
             var t = await _repo.GetAsync(request.HardwareId);
