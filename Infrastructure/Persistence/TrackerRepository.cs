@@ -16,14 +16,14 @@ namespace Infrastructure.Persistence
 
         public override async Task AddAsync(Tracker entity)
         {
-            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            await Commit(async con =>
             {
                 var insertQuery = $"INSERT INTO location(Id, Longitude, Latitude) VALUES(@Id, @Longitude, @Latitude)";
-                await connection.ExecuteAsync(insertQuery, new { Id=entity.Location.Id, Longitude=entity.Location.Longitude, Latitude=entity.Location.Latitude });
-                
+                await con.ExecuteAsync(insertQuery, new { Id = entity.Location.Id, Longitude = entity.Location.Longitude, Latitude = entity.Location.Latitude });
+
                 insertQuery = $"INSERT INTO tracker(HardwareId, LastUpdate, LocationId) VALUES(@HardwareId, @LastUpdate, @LocationId)";
-                await connection.ExecuteAsync(insertQuery, new { HardwareId=entity.HardwareId, LastUpdate=entity.LastUpdate, LocationId=entity.Location.Id });
-            }
+                await con.ExecuteAsync(insertQuery, new { HardwareId = entity.HardwareId, LastUpdate = entity.LastUpdate, LocationId = entity.Location.Id });
+            });
         }
 
         public override Task DeleteAsync(Tracker entity)
@@ -62,14 +62,14 @@ namespace Infrastructure.Persistence
 
         public override async Task UpdateAsync(Tracker entity)
         {
-            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            await Commit(async con =>
             {
                 var updateQuery = $"UPDATE location SET Longitude=@Longitude, Latitude=@Latitude WHERE Id=@Id";
-                await connection.ExecuteAsync(updateQuery, new { Id = entity.Location.Id, Longitude = entity.Location.Longitude, Latitude = entity.Location.Latitude });
+                await con.ExecuteAsync(updateQuery, new { Id = entity.Location.Id, Longitude = entity.Location.Longitude, Latitude = entity.Location.Latitude });
 
                 updateQuery = $"UPDATE tracker SET LastUpdate=@LastUpdate, LocationId=@LocationId WHERE HardwareId=@HardwareId";
-                await connection.ExecuteAsync(updateQuery, new { HardwareId = entity.HardwareId, LastUpdate = entity.LastUpdate, LocationId = entity.Location.Id });
-            }
+                await con.ExecuteAsync(updateQuery, new { HardwareId = entity.HardwareId, LastUpdate = entity.LastUpdate, LocationId = entity.Location.Id });
+            });
         }
     }
 }

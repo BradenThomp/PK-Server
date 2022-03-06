@@ -14,21 +14,21 @@ namespace Infrastructure.Persistence
     {
         public RentalRepository(IConfiguration configuration) : base(configuration) { }
 
-        public override async Task AddAsync(Rental entity)
+        public override async Task AddAsync(Rental entity) 
         {
-            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            await Commit(async (con) =>
             {
-                // TODO: do this in 1 transaction.
                 var insertQuery = $"INSERT INTO customer(Id, Name, Phone, Email) VALUES(@Id, @Name, @Phone, @Email)";
-                await connection.ExecuteAsync(insertQuery, new { 
-                    Id = entity.Customer.Id, 
-                    Name = entity.Customer.Name, 
+                await con.ExecuteAsync(insertQuery, new
+                {
+                    Id = entity.Customer.Id,
+                    Name = entity.Customer.Name,
                     Phone = entity.Customer.Phone,
                     Email = entity.Customer.Email
                 });
 
                 insertQuery = $"INSERT INTO venue(Id, Address, City, Province, PostalCode) VALUES(@Id, @Address, @City, @Province, @PostalCode)";
-                await connection.ExecuteAsync(insertQuery, new
+                await con.ExecuteAsync(insertQuery, new
                 {
                     Id = entity.Destination.Id,
                     Address = entity.Destination.Address,
@@ -38,7 +38,7 @@ namespace Infrastructure.Persistence
                 });
 
                 insertQuery = $"INSERT INTO rental(Id, RentalDate, ExpectedReturnDate, CustomerId, DestinationId) VALUES(@Id, @RentalDate, @ExpectedReturnDate, @CustomerId, @DestinationId)";
-                await connection.ExecuteAsync(insertQuery, new
+                await con.ExecuteAsync(insertQuery, new
                 {
                     Id = entity.Id,
                     RentalDate = entity.RentalDate,
@@ -47,15 +47,15 @@ namespace Infrastructure.Persistence
                     DestinationId = entity.Destination.Id,
                 });
 
-                foreach(var speaker in entity.RentedSpeakers)
+                foreach (var speaker in entity.RentedSpeakers)
                 {
                     var updateQuery = $"UPDATE speaker SET TrackerId=@TrackerId, RentalId=@RentalId WHERE SerialNumber=@SerialNumber";
-                    await connection.ExecuteAsync(updateQuery, new { SerialNumber = speaker.SerialNumber, RentalId=entity.Id, TrackerId = speaker.Tracker?.HardwareId });
+                    await con.ExecuteAsync(updateQuery, new { SerialNumber = speaker.SerialNumber, RentalId = entity.Id, TrackerId = speaker.Tracker?.HardwareId });
 
                     updateQuery = $"UPDATE tracker SET SpeakerSerialNumber=@SerialNumber WHERE HardwareId=@TrackerId";
-                    await connection.ExecuteAsync(updateQuery, new { SerialNumber = speaker.SerialNumber, TrackerId = speaker.Tracker?.HardwareId });
+                    await con.ExecuteAsync(updateQuery, new { SerialNumber = speaker.SerialNumber, TrackerId = speaker.Tracker?.HardwareId });
                 }
-            }
+            });
         }
 
         public override Task DeleteAsync(Rental entity)
@@ -114,23 +114,23 @@ namespace Infrastructure.Persistence
 
         public override async Task UpdateAsync(Rental entity)
         {
-            using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
+            await Commit(async con =>
             {
                 var updateQuery = $"UPDATE rental SET DateReturned=@DateReturned WHERE Id=@Id";
-                await connection.ExecuteAsync(updateQuery, new { DateReturned = entity.DateReturned, Id = entity.Id });
+                await con.ExecuteAsync(updateQuery, new { DateReturned = entity.DateReturned, Id = entity.Id });
 
-                foreach(var returnedRental in entity.ReturnedSpeakers)
+                foreach (var returnedRental in entity.ReturnedSpeakers)
                 {
                     updateQuery = $"UPDATE speaker SET RentalId=@RentalId, TrackerId=@TrackerId  WHERE SerialNumber=@SerialNumber";
-                    await connection.ExecuteAsync(updateQuery, new { RentalId = (Guid?)null, TrackerId=(Guid?)null, SerialNumber = returnedRental.SerialNumber });
+                    await con.ExecuteAsync(updateQuery, new { RentalId = (Guid?)null, TrackerId = (Guid?)null, SerialNumber = returnedRental.SerialNumber });
 
                     updateQuery = $"UPDATE tracker SET SpeakerSerialNumber=@NewSerialNumber WHERE SpeakerSerialNumber=@OldSerialNumber";
-                    await connection.ExecuteAsync(updateQuery, new { NewSerialNumber = (string)null, OldSerialNumber = returnedRental.SerialNumber });
+                    await con.ExecuteAsync(updateQuery, new { NewSerialNumber = (string)null, OldSerialNumber = returnedRental.SerialNumber });
 
                     var insertQuery = $"INSERT IGNORE INTO returned_speaker(SerialNumber, Model, RentalId, DateReturned) VALUES(@SerialNumber, @Model, @RentalId, @DateReturned)";
-                    await connection.ExecuteAsync(insertQuery, new { SerialNumber = returnedRental.SerialNumber, Model = returnedRental.Model, RentalId = returnedRental.RentalId, DateReturned = returnedRental.DateReturned});
+                    await con.ExecuteAsync(insertQuery, new { SerialNumber = returnedRental.SerialNumber, Model = returnedRental.Model, RentalId = returnedRental.RentalId, DateReturned = returnedRental.DateReturned });
                 }
-            }
+            });
         }
     }
 }
