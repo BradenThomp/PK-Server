@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Features.Tracking.Dtos;
+using AutoMapper;
+using Domain.Models;
 
 namespace Application.Features.Map.Queries
 {
@@ -14,10 +16,12 @@ namespace Application.Features.Map.Queries
     public class GetAllRentalsQueryHandler : IRequestHandler<GetMapQuery, IEnumerable<MapPlotPointDto>>
     {
         private readonly IRentalRepository _repo;
+        private readonly IMapper _mapper;
 
-        public GetAllRentalsQueryHandler(IRentalRepository repo)
+        public GetAllRentalsQueryHandler(IRentalRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<MapPlotPointDto>> Handle(GetMapQuery request, CancellationToken cancellationToken)
@@ -27,7 +31,7 @@ namespace Application.Features.Map.Queries
             List<MapPlotPointDto> result = new List<MapPlotPointDto>();
             foreach (var rental in openRentals)
             {
-                var plotPoints = rental.RentedSpeakers.Select(s => new MapPlotPointDto(rental.Id, rental.Customer.Name, s.SerialNumber, s.Model, new TrackerDto(s.Tracker.HardwareId, s.Tracker.LastUpdate, new LocationDto(s.Tracker.Location.Longitude, s.Tracker.Location.Latitude))));
+                var plotPoints = rental.RentedSpeakers.Select(s => new MapPlotPointDto(rental.Id, rental.Customer.Name, s.SerialNumber, s.Model, _mapper.Map<Tracker, TrackerDto>(s.Tracker)));
                 result.AddRange(plotPoints);
             }
             return result;
