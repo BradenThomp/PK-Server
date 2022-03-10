@@ -1,8 +1,11 @@
 ﻿using Application.Common.Notifications;
 using Application.Common.Repository;
+using FluentScheduler;
+using Infrastructure.Emails;
 using Infrastructure.Notifications;
 using Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Infrastructure
 {
@@ -21,6 +24,16 @@ namespace Infrastructure
             services.AddTransient<ITrackerRepository, TrackerRepository>();
             services.AddTransient<IRentalRepository, RentalRepository>();
             services.AddTransient<INotificationService, NotificationHub>();
+        }
+
+        public static void UseBackgroundScheduler(this IServiceProvider serviceProvider)
+        {
+            JobManager.Initialize(new EmailJobRegistry(serviceProvider.GetRequiredService<IRentalRepository>()));
+        }
+
+        public static void Shutdown()
+        {
+            JobManager.StopAndBlock();
         }
     }
 }
