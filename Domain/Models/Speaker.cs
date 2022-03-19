@@ -44,6 +44,10 @@ namespace Domain.Models
         /// <param name="tracker">The tracker to attach.</param>
         public void AttachTracker(Tracker tracker)
         {
+            if(tracker is null)
+            {
+                throw new DomainValidationException($"Empty trackers cannot be attached to speakers.");
+            }
             if (!string.IsNullOrEmpty(tracker.SpeakerSerialNumber))
             {
                 throw new DomainValidationException($"Could not assign tracker {tracker.HardwareId} to speaker {SerialNumber} as the tracker is currently in use.");

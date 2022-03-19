@@ -1,4 +1,5 @@
-﻿using Domain.Common.Models;
+﻿using Domain.Common.Exceptions;
+using Domain.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,13 +85,17 @@ namespace Domain.Models
         {
             foreach(var serial in returnedSerialNumbers)
             {
-                var speaker = RentedSpeakers.First(s => s.SerialNumber == serial);
+                var speaker = RentedSpeakers.FirstOrDefault(s => s.SerialNumber == serial);
                 if (speaker is null)
                 {
-                    throw new InvalidOperationException($"Speaker being returned is not part of rental {Id}");
+                    throw new DomainValidationException($"Speaker being returned is not part of rental or has already been returned {Id}");
                 }
                 var returnedSpeaker = speaker.Return();
                 RentedSpeakers.Remove(speaker);
+                if(ReturnedSpeakers is null)
+                {
+                    ReturnedSpeakers = new List<ReturnedSpeaker>();
+                }
                 ReturnedSpeakers.Add(returnedSpeaker);
                 if(RentedSpeakers.Count == 0)
                 {

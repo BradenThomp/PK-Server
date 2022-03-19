@@ -1,5 +1,7 @@
-﻿using Domain.Common.Models;
+﻿using Domain.Common.Exceptions;
+using Domain.Common.Models;
 using System;
+using System.Text.RegularExpressions;
 
 namespace Domain.Models
 {
@@ -12,9 +14,35 @@ namespace Domain.Models
 
         public string Name { get; set; }
 
-        public string Phone { get; set; }
+        private string _phone;
+        public string Phone 
+        { 
+            get => _phone; 
+            set 
+            {
+                var r = new Regex(@"^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$");
+                if (!r.IsMatch(value))
+                {
+                    throw new DomainValidationException($"Phone number {value} is not valid.");
+                }
+                _phone = value;
+            } 
+        }
 
-        public string Email { get; set; }
+        private string _email;
+        public string Email
+        {
+            get => _email;
+            set
+            {
+                var r = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                if (!r.IsMatch(value))
+                {
+                    throw new DomainValidationException($"Email number {value} is not valid.");
+                }
+                _email = value;
+            }
+        }
 
         public Customer() { }
 
