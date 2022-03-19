@@ -5,9 +5,9 @@ namespace Infrastructure.Emails
 {
     public class EmailJobRegistry : Registry
     {
-        public EmailJobRegistry(IRentalRepository rentalRepo)
+        public EmailJobRegistry(IRentalRepository rentalRepo, INotificationEmailRepository emailRepo)
         {
-            Schedule(new OutstandingRentalsJob(rentalRepo)).ToRunEvery(10).Seconds();
+            Schedule(new OutstandingRentalsJob(rentalRepo, emailRepo)).ToRunEvery(10).Seconds();
         }
     }
 }

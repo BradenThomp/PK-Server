@@ -23,12 +23,17 @@ namespace Infrastructure
             services.AddTransient<ISpeakerRepository, SpeakerRepository>();
             services.AddTransient<ITrackerRepository, TrackerRepository>();
             services.AddTransient<IRentalRepository, RentalRepository>();
+            services.AddTransient<INotificationEmailRepository, NotificationEmailRepository>();
             services.AddTransient<INotificationService, NotificationHub>();
         }
 
+        /// <summary>
+        /// Enables the usage of the background job scheduler.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider to inject depencies.</param>
         public static void UseBackgroundScheduler(this IServiceProvider serviceProvider)
         {
-            JobManager.Initialize(new EmailJobRegistry(serviceProvider.GetRequiredService<IRentalRepository>()));
+            JobManager.Initialize(new EmailJobRegistry(serviceProvider.GetRequiredService<IRentalRepository>(), serviceProvider.GetRequiredService<INotificationEmailRepository>()));
         }
 
         public static void Shutdown()
