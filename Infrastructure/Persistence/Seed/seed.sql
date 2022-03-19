@@ -57,3 +57,7 @@ CREATE TABLE `speaker` (
     FOREIGN KEY (`TrackerId`) REFERENCES tracker (`HardwareId`),
     FOREIGN KEY (`RentalId`) REFERENCES rental (`Id`)
 );
+
+CREATE TABLE `notification_email` (
+	`Email` varchar(50) primary key NOT NULL
+);

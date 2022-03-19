@@ -80,7 +80,7 @@ namespace Web_Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -104,6 +104,8 @@ namespace Web_Api
                 endpoints.MapControllers();
                 endpoints.MapHub<NotificationHub>("/notifications");
             });
+
+            app.ApplicationServices.UseBackgroundScheduler();
         }
     }
 }
