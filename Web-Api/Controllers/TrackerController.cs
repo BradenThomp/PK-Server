@@ -54,5 +54,12 @@ namespace Web_Api.Controllers
             var result = await _mediator.Send(new GetAllTrackersQuery());
             return result.ToList();
         }
+
+        [HttpGet("available")]
+        public async Task<ActionResult<IEnumerable<TrackerDto>>> GetAllAvailable()
+        {
+            var result = await _mediator.Send(new GetAvailableTrackersQuery());
+            return result.ToList();
+        }
     }
 }
