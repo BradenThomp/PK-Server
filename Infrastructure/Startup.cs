@@ -1,9 +1,11 @@
 ﻿using Application.Common.Notifications;
 using Application.Common.Repository;
+using Application.Common.Services;
 using FluentScheduler;
 using Infrastructure.Emails;
 using Infrastructure.Notifications;
 using Infrastructure.Persistence;
+using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -25,6 +27,7 @@ namespace Infrastructure
             services.AddTransient<IRentalRepository, RentalRepository>();
             services.AddTransient<INotificationEmailRepository, NotificationEmailRepository>();
             services.AddTransient<INotificationService, NotificationHub>();
+            services.AddTransient<ILocationService, LocationService>();
         }
 
         /// <summary>

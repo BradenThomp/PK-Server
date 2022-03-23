@@ -20,7 +20,9 @@ CREATE TABLE `venue` (
     `Address` varchar(50) NOT NULL,
 	`City` varchar(50) NOT NULL,
 	`Province` varchar(50) NOT NULL,
-	`PostalCode` varchar(50) NOT NULL
+	`PostalCode` varchar(50) NOT NULL,
+    `LocationId` char(36) NOT NULL,
+    FOREIGN KEY (`LocationId`) REFERENCES location (`Id`)
 );
 
 CREATE TABLE `tracker` (
