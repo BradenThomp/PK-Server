@@ -1,9 +1,11 @@
 ﻿using Application.Common.Notifications;
 using Application.Common.Repository;
+using Application.Common.Services;
 using FluentScheduler;
 using Infrastructure.Emails;
 using Infrastructure.Notifications;
 using Infrastructure.Persistence;
+using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -25,6 +27,8 @@ namespace Infrastructure
             services.AddTransient<IRentalRepository, RentalRepository>();
             services.AddTransient<INotificationEmailRepository, NotificationEmailRepository>();
             services.AddTransient<INotificationService, NotificationHub>();
+            services.AddTransient<ILocationService, LocationService>();
+            services.AddTransient<IEmailService, EmailService>();
         }
 
         /// <summary>
@@ -33,7 +37,7 @@ namespace Infrastructure
         /// <param name="serviceProvider">The service provider to inject depencies.</param>
         public static void UseBackgroundScheduler(this IServiceProvider serviceProvider)
         {
-            JobManager.Initialize(new EmailJobRegistry(serviceProvider.GetRequiredService<IRentalRepository>(), serviceProvider.GetRequiredService<INotificationEmailRepository>()));
+            JobManager.Initialize(new EmailJobRegistry(serviceProvider.GetRequiredService<IRentalRepository>(), serviceProvider.GetRequiredService<IEmailService>()));
         }
 
         public static void Shutdown()

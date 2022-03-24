@@ -29,6 +29,11 @@ namespace Domain.Models
         /// </summary>
         public Guid? RentalId { get; set; }
 
+        /// <summary>
+        /// Flag that marks whether or not the speaker has reached its rental destination.
+        /// </summary>
+        public bool ReachedDestination { get; set; }
+
         public Speaker() { }
 
         public Speaker(string serialNumber, string model)
@@ -36,6 +41,7 @@ namespace Domain.Models
             SerialNumber = serialNumber;
             Model = model;
             RentalId = null;
+            ReachedDestination = false;
         }
 
         /// <summary>
@@ -74,6 +80,7 @@ namespace Domain.Models
             Tracker.SpeakerSerialNumber = null;
             Tracker = null;
             RentalId = null;
+            ReachedDestination = false;
             return result;
         }
     }

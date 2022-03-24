@@ -1,4 +1,5 @@
 ﻿using Domain.Common.Exceptions;
+using Domain.Common.Extensions;
 using Domain.Common.Models;
 using System;
 
@@ -46,5 +47,34 @@ namespace Domain.Models
         }
 
         public Location(){}
+
+        /// <summary>
+        /// Returns true if this is within 250 meters of the other location.
+        /// </summary>
+        /// <param name="location">The other location.</param>
+        /// <returns>True if the distance is within 250 meters.</returns>
+        public bool Within250Meters(Location location)
+        {
+            var distance = HaversineDistance(location, this);
+            return distance < 0.25;
+        }
+
+        /// <summary>
+        /// Returns the distance in kilometers between two geo-locations.
+        /// </summary>
+        /// <param name="pos1">Location 1</param>
+        /// <param name="pos2">Location 2</param>
+        /// <returns>Distance between two points in kilometers.</returns>
+        private double HaversineDistance(Location pos1, Location pos2)
+        {
+            double radius = 6371;
+            var lat = (pos2.Latitude - pos1.Latitude).ToRadians();
+            var lng = (pos2.Longitude - pos1.Longitude).ToRadians();
+            var h1 = Math.Sin(lat / 2) * Math.Sin(lat / 2) +
+                          Math.Cos(pos1.Latitude.ToRadians()) * Math.Cos(pos2.Latitude.ToRadians()) *
+                          Math.Sin(lng / 2) * Math.Sin(lng / 2);
+            var h2 = 2 * Math.Asin(Math.Min(1, Math.Sqrt(h1)));
+            return radius * h2;
+        }
     }
 }

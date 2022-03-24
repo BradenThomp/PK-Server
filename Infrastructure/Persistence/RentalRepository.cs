@@ -29,22 +29,32 @@ namespace Infrastructure.Persistence
                     Email = entity.Customer.Email
                 });
 
-                insertQuery = $"INSERT INTO venue(Id, Address, City, Province, PostalCode) VALUES(@Id, @Address, @City, @Province, @PostalCode)";
+                insertQuery = $"INSERT INTO location(Id, Longitude, Latitude) VALUES(@Id, @Longitude, @Latitude)";
+                await con.ExecuteAsync(insertQuery, new
+                {
+                    Id = entity.Destination.Cooridinates.Id,
+                    Longitude = entity.Destination.Cooridinates.Longitude,
+                    Latitude = entity.Destination.Cooridinates.Latitude,
+                });
+
+                insertQuery = $"INSERT INTO venue(Id, Address, City, Province, PostalCode, LocationId) VALUES(@Id, @Address, @City, @Province, @PostalCode, @LocationId)";
                 await con.ExecuteAsync(insertQuery, new
                 {
                     Id = entity.Destination.Id,
                     Address = entity.Destination.Address,
                     City = entity.Destination.City,
                     Province = entity.Destination.Province,
-                    PostalCode = entity.Destination.PostalCode
+                    PostalCode = entity.Destination.PostalCode,
+                    LocationId = entity.Destination.Cooridinates.Id
                 });
 
-                insertQuery = $"INSERT INTO rental(Id, RentalDate, ExpectedReturnDate, CustomerId, DestinationId) VALUES(@Id, @RentalDate, @ExpectedReturnDate, @CustomerId, @DestinationId)";
+                insertQuery = $"INSERT INTO rental(Id, RentalDate, ExpectedReturnDate, ArrivalDate, CustomerId, DestinationId) VALUES(@Id, @RentalDate, @ExpectedReturnDate, @ArrivalDate, @CustomerId, @DestinationId)";
                 await con.ExecuteAsync(insertQuery, new
                 {
                     Id = entity.Id,
                     RentalDate = entity.RentalDate,
                     ExpectedReturnDate = entity.ExpectedReturnDate,
+                    ArrivalDate = entity.ArrivalDate,
                     CustomerId = entity.Customer.Id,
                     DestinationId = entity.Destination.Id,
                 });
@@ -71,14 +81,16 @@ namespace Infrastructure.Persistence
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
             {
-                var rentals = await connection.QueryAsync<Rental, Customer, Venue, Rental>(
+                var rentals = await connection.QueryAsync<Rental, Customer, Venue, Location, Rental>(
                     $"SELECT *" +
                     $"FROM rental r " +
                     $"INNER JOIN customer c ON c.Id = r.CustomerId " +
-                    $"INNER JOIN venue v ON v.Id = r.DestinationId", 
-                    (rental, customer, destination) =>
+                    $"INNER JOIN venue v ON v.Id = r.DestinationId " +
+                    $"INNER JOIN location l ON l.Id = v.LocationId", 
+                    (rental, customer, destination, location) =>
                     {
                         rental.Customer = customer;
+                        destination.Cooridinates = location;
                         rental.Destination = destination;
                         return rental;
                     });

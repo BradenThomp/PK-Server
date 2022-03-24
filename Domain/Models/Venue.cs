@@ -8,7 +8,7 @@ namespace Domain.Models
     /// </summary>
     public class Venue : IModel
     {
-        //public Location Cooridinates { get; set; }
+        public Location Cooridinates { get; set; }
 
         public Guid Id { get; init; }
 
@@ -22,8 +22,9 @@ namespace Domain.Models
 
         public Venue() { }
 
-        public Venue(string address, string city, string province, string postalCode)
+        public Venue(Location coordinates, string address, string city, string province, string postalCode)
         {
+            Cooridinates = coordinates;
             Address = address;
             City = city;
             Province = province;
