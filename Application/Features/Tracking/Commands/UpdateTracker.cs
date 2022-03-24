@@ -1,5 +1,6 @@
 ﻿using Application.Common.Notifications;
 using Application.Common.Repository;
+using Application.Common.Services;
 using Application.Features.Tracking.Dtos;
 using Application.Features.Tracking.Notifications;
 using MediatR;
@@ -13,13 +14,18 @@ namespace Application.Features.Tracking.Commands
     public class UpdateTrackerCommandHandler : IRequestHandler<UpdateTrackerCommand>
     {
         private readonly ITrackerRepository _repo;
-
+        private readonly ISpeakerRepository _speakerRepo;
+        private readonly IRentalRepository _rentalRepo;
         private readonly INotificationService _notifications;
+        private readonly IEmailService _emailService;
 
-        public UpdateTrackerCommandHandler(ITrackerRepository repo, INotificationService notifications)
+        public UpdateTrackerCommandHandler(ITrackerRepository repo, ISpeakerRepository speakerRepo, IRentalRepository rentalRepo, INotificationService notifications, IEmailService emailService)
         {
             _repo = repo;
             _notifications = notifications;
+            _speakerRepo = speakerRepo;
+            _rentalRepo = rentalRepo;
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -33,9 +39,20 @@ namespace Application.Features.Tracking.Commands
             var t = await _repo.GetAsync(request.HardwareId);
             t.UpdateLocation(request.Longitude, request.Latitude);
             await _repo.UpdateAsync(t);
-            if(!string.IsNullOrEmpty(t.SpeakerSerialNumber))
+            if (!string.IsNullOrEmpty(t.SpeakerSerialNumber))
             {
                 await _notifications.Notify(new LocationUpdatedNotification(t.SpeakerSerialNumber, new TrackerDto(t.HardwareId, t.LastUpdate, new LocationDto(t.Location.Longitude, t.Location.Latitude))));
+                var s = await _speakerRepo.GetAsync(t.SpeakerSerialNumber);
+                if (!s.ReachedDestination)
+                {
+                    var r = await _rentalRepo.GetAsync(s.RentalId);
+                    if (r.Destination.Cooridinates is not null && t.Location.Within250Meters(r.Destination.Cooridinates) && !s.ReachedDestination)
+                    {
+                        s.ReachedDestination = true;
+                        await _speakerRepo.UpdateAsync(s);
+                        await _emailService.MailAll("A rented speaker has reached it's destination.", $"Speaker {s.SerialNumber} has reached its destination at {r.Destination.Address}, {r.Destination.City}. This speaker was part of rental {s.RentalId}");
+                    }
+                }
             }
             return Unit.Value;
         }

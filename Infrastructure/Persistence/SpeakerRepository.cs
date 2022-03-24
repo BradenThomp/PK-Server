@@ -19,8 +19,8 @@ namespace Infrastructure.Persistence
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
             {
-                var insertQuery = $"INSERT INTO speaker(SerialNumber, Model) VALUES(@SerialNumber, @Model)";
-                await connection.ExecuteAsync(insertQuery, new { SerialNumber = entity.SerialNumber, Model = entity.Model });
+                var insertQuery = $"INSERT INTO speaker(SerialNumber, Model, ReachedDestination) VALUES(@SerialNumber, @Model, @ReachedDestination)";
+                await connection.ExecuteAsync(insertQuery, new { SerialNumber = entity.SerialNumber, Model = entity.Model, ReachedDestination = entity.ReachedDestination });
             }
         }
 
@@ -78,8 +78,8 @@ namespace Infrastructure.Persistence
         {
             using (var connection = new MySqlConnection(_configuration.GetConnectionString("ApplicationMySQLDataBase")))
             {
-                var updateQuery = $"UPDATE speaker SET TrackerId=@TrackerId, RentalId=@RentalId WHERE SerialNumber=@SerialNumber";
-                await connection.ExecuteAsync(updateQuery, new { SerialNumber = entity.SerialNumber, TrackerId = entity.Tracker?.HardwareId, RentalId=entity.RentalId });
+                var updateQuery = $"UPDATE speaker SET TrackerId=@TrackerId, RentalId=@RentalId, ReachedDestination=@ReachedDestination WHERE SerialNumber=@SerialNumber";
+                await connection.ExecuteAsync(updateQuery, new { SerialNumber = entity.SerialNumber, TrackerId = entity.Tracker?.HardwareId, RentalId=entity.RentalId, ReachedDestination=entity.ReachedDestination });
             }
         }
     }

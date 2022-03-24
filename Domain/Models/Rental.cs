@@ -39,6 +39,11 @@ namespace Domain.Models
         public DateTime? DateReturned { get; set; }
 
         /// <summary>
+        /// The date that the rental is expected to arrive at the venue.
+        /// </summary>
+        public DateTime ArrivalDate { get; set; }
+
+        /// <summary>
         /// The date that all speakers are expected to be returned by.
         /// </summary>
         public DateTime ExpectedReturnDate { get; set; }
@@ -60,12 +65,13 @@ namespace Domain.Models
 
         public Rental() { }
 
-        public Rental(ICollection<Speaker> rentedSpeakers, Customer customer, DateTime rentalDate, DateTime expectedReturnDate, Venue destination)
+        public Rental(ICollection<Speaker> rentedSpeakers, Customer customer, DateTime rentalDate, DateTime expectedReturnDate, DateTime arrivalDate, Venue destination)
         {
             RentedSpeakers = rentedSpeakers;
             Customer = customer;
             RentalDate = rentalDate;
             ExpectedReturnDate = expectedReturnDate;
+            ArrivalDate = arrivalDate;
             Destination = destination;
             Id = Guid.NewGuid();
             DateReturned = null;

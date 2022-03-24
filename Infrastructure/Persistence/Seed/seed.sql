@@ -37,6 +37,7 @@ CREATE TABLE `rental` (
 	`Id` char(36) primary key NOT NULL,
 	`CustomerId` char(36) NOT NULL,
 	`RentalDate` datetime NOT NULL,
+    `ArrivalDate` datetime NOT NULL,
 	`DestinationId` char(36) NOT NULL,
     `ExpectedReturnDate` datetime NOT NULL,
     `DateReturned` datetime 
@@ -54,8 +55,9 @@ CREATE TABLE `returned_speaker` (
 CREATE TABLE `speaker` (
 	`SerialNumber` varchar(50) primary key NOT NULL,
     `Model` varchar(50) NOT NULL,
+    `ReachedDestination` boolean NOT NULL,
+	`RentalId`char(36), 
     `TrackerId` varchar(50) UNIQUE,
-    `RentalId`char(36), 
     FOREIGN KEY (`TrackerId`) REFERENCES tracker (`HardwareId`),
     FOREIGN KEY (`RentalId`) REFERENCES rental (`Id`)
 );

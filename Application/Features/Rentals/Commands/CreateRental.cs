@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Rentals.Commands
 {
-    public record CreateRentalCommand(IEnumerable<SpeakerTrackerMappingDto> SpeakerTrackerMappings, CustomerDto Customer, VenueDto Destination, DateTime RentalDate, DateTime ExpectedReturnDate) : IRequest<Guid>;
+    public record CreateRentalCommand(IEnumerable<SpeakerTrackerMappingDto> SpeakerTrackerMappings, CustomerDto Customer, VenueDto Destination, DateTime RentalDate, DateTime ArrivalDate, DateTime ExpectedReturnDate) : IRequest<Guid>;
 
     public class CreateRentalCommandHandler : IRequestHandler<CreateRentalCommand, Guid>
     {
@@ -54,7 +54,7 @@ namespace Application.Features.Rentals.Commands
             var destination = new Domain.Models.Venue(location, d.Address, d.City, d.Province, d.PostalCode);
             var c = request.Customer;
             var customer = new Domain.Models.Customer(c.Name, c.Phone, c.Email);
-            var rental = new Domain.Models.Rental(rentedSpeakers, customer, request.RentalDate, request.ExpectedReturnDate, destination);
+            var rental = new Domain.Models.Rental(rentedSpeakers, customer, request.RentalDate, request.ExpectedReturnDate, request.ArrivalDate, destination);
             await _rentalRepo.AddAsync(rental);
             var trackersToMap = rental.RentedSpeakers.Select(s => new MapPlotPointDto(rental.Id, rental.Customer.Name, s.SerialNumber, s.Model, new TrackerDto(s.Tracker.HardwareId, s.Tracker.LastUpdate, new LocationDto(s.Tracker.Location.Longitude, s.Tracker.Location.Latitude))));
             await _notificationService.Notify(new RentalCreatedNotification(trackersToMap));

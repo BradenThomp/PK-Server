@@ -48,12 +48,13 @@ namespace Infrastructure.Persistence
                     LocationId = entity.Destination.Cooridinates.Id
                 });
 
-                insertQuery = $"INSERT INTO rental(Id, RentalDate, ExpectedReturnDate, CustomerId, DestinationId) VALUES(@Id, @RentalDate, @ExpectedReturnDate, @CustomerId, @DestinationId)";
+                insertQuery = $"INSERT INTO rental(Id, RentalDate, ExpectedReturnDate, ArrivalDate, CustomerId, DestinationId) VALUES(@Id, @RentalDate, @ExpectedReturnDate, @ArrivalDate, @CustomerId, @DestinationId)";
                 await con.ExecuteAsync(insertQuery, new
                 {
                     Id = entity.Id,
                     RentalDate = entity.RentalDate,
                     ExpectedReturnDate = entity.ExpectedReturnDate,
+                    ArrivalDate = entity.ArrivalDate,
                     CustomerId = entity.Customer.Id,
                     DestinationId = entity.Destination.Id,
                 });
