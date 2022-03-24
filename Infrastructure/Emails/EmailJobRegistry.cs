@@ -9,7 +9,7 @@ namespace Infrastructure.Emails
         public EmailJobRegistry(IRentalRepository rentalRepo, IEmailService emailService)
         {
             Schedule(new OutstandingRentalsJob(rentalRepo, emailService)).ToRunEvery(1).Days();
-            Schedule(new UnarrivedRentalsJob(rentalRepo, emailService)).ToRunEvery(10).Seconds();
+            Schedule(new UnarrivedRentalsJob(rentalRepo, emailService)).ToRunEvery(1).Days();
         }
     }
 }
