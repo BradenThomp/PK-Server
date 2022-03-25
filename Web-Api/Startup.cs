@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using Web_Api.Common.Exceptions;
 
 namespace Web_Api
 {
@@ -24,7 +25,6 @@ namespace Web_Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddInfrastructureLayer();
             services.AddApplicationLayer();
@@ -79,9 +79,23 @@ namespace Web_Api
             });
         }
 
+        private void CheckApiKeysAreProvided()
+        {
+            if (Configuration.GetConnectionString("MapQuestApiKey").Equals("KEY"))
+            {
+                throw new AppSettingNotProvidedException("MapQuest Api Key was not provided. Please enter a valid key in appsettings.json");
+            }
+            if (Configuration.GetConnectionString("ApplicationMySQLDataBase").Equals("Server=IPAddress;Database=DBName;Uid=Username;Pwd=Password;"))
+            {
+                throw new AppSettingNotProvidedException("MYSQL connection string was not provided. Please enter a valid connection string in appsettings.json");
+            }
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
         {
+            CheckApiKeysAreProvided();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

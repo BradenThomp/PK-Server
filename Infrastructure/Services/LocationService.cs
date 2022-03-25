@@ -28,18 +28,18 @@ namespace Infrastructure.Services
             var result = await _httpClient.GetAsync(url);
             if (!result.IsSuccessStatusCode)
             {
-                return null;
+                // These coordinates mean the location could not be resolved.
+                return new Location(0, 0);
             }
             var json = await result.Content.ReadAsStringAsync();
 
             dynamic obj = JsonConvert.DeserializeObject(json);
-            var test = obj.results[0].locations[0].displayLatLng.lng;
             double longitude = Convert.ToDouble(obj.results[0].locations[0].displayLatLng.lng);
             double latitude = Convert.ToDouble(obj.results[0].locations[0].displayLatLng.lat);
             if(longitude == -100.445882 && latitude == 39.78373)
             {
                 // These coordinates mean the location could not be resolved.
-                return null;
+                return new Location(0, 0);
             }
             return new Location(longitude, latitude);
         }

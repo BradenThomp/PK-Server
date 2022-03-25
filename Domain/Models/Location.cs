@@ -60,6 +60,13 @@ namespace Domain.Models
         }
 
         /// <summary>
+        /// Checks if coordinates are placeholders (not valid).
+        /// Set 0,0 as invalid as there will never be a venue in the middle of the ocean.
+        /// </summary>
+        /// <returns>True if placeholder, else false.</returns>
+        public bool IsPlaceHolder() => Latitude == 0 && Longitude == 0;
+
+        /// <summary>
         /// Returns the distance in kilometers between two geo-locations.
         /// </summary>
         /// <param name="pos1">Location 1</param>

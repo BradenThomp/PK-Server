@@ -29,7 +29,7 @@ namespace Domain.Test.Models
                 sn1,
                 sn2
             };
-            Rental r = new Rental(speakers, new Customer(), new DateTime(2022, 4, 17), new DateTime(2022, 4, 18), new Venue());
+            Rental r = new Rental(speakers, new Customer(), new DateTime(2022, 4, 16), new DateTime(2022, 4, 18), new DateTime(2022, 4, 17), new Venue());
             r.ReturnSpeakers(new string[] { "sn-1" });
             Assert.That(r.ReturnedSpeakers.Count(), Is.EqualTo(1));
             Assert.That(r.RentedSpeakers.Count(), Is.EqualTo(1));
@@ -60,7 +60,7 @@ namespace Domain.Test.Models
                 sn1,
                 sn2
             };
-            Rental r = new Rental(speakers, new Customer(), new DateTime(2022, 4, 17), new DateTime(2022, 4, 18), new Venue());
+            Rental r = new Rental(speakers, new Customer(), new DateTime(2022, 4, 16), new DateTime(2022, 4, 18), new DateTime(2022, 4, 17), new Venue());
             Assert.Throws<DomainValidationException>(() => r.ReturnSpeakers(new string[] { "sn-3" }));
         }
 
@@ -84,7 +84,7 @@ namespace Domain.Test.Models
                 sn1,
                 sn2
             };
-            Rental r = new Rental(speakers, new Customer(), new DateTime(2022, 4, 17), new DateTime(2022, 4, 18), new Venue());
+            Rental r = new Rental(speakers, new Customer(), new DateTime(2022, 4, 16), new DateTime(2022, 4, 18), new DateTime(2022, 4, 17), new Venue());
             r.ReturnSpeakers(new string[] { "sn-2" });
             Assert.Throws<DomainValidationException>(() => r.ReturnSpeakers(new string[] { "sn-2" }));
         }

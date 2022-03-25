@@ -22,7 +22,7 @@ namespace Infrastructure.Emails
             var today = DateTime.Now;
             foreach (Domain.Models.Rental r in rentals)
             {
-                if(r.RentedSpeakers.Count(s => !s.ReachedDestination) == 0)
+                if (r.RentedSpeakers.Count(s => !s.ReachedDestination) == 0)
                 {
                     continue;
                 }
@@ -35,12 +35,12 @@ namespace Infrastructure.Emails
                         content += "Speaker: " + speaker.SerialNumber + "\n";
                     }
                 }
-                if (DateTime.Compare(today, r.ArrivalDate) > 0)
+                if (DateTime.Compare(today, r.ArrivalDate) > 0 && !r.Destination.Cooridinates.IsPlaceHolder())
                 {
+                    // We don't want to send an email if the coordinates could not be resolved and were instead populated with placeholders.
                     _emailService.MailAll(subject, content);
                 }
             }
-
         }
     }
 }
