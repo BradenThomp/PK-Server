@@ -12,10 +12,12 @@ namespace Application.Features.Tracking.Commands
     public class CreateTrackerCommandHandler : IRequestHandler<CreateTrackerCommand>
     {
         private readonly ITrackerRepository _repo;
+        private readonly IMediator _mediator;
 
-        public CreateTrackerCommandHandler(ITrackerRepository repo)
+        public CreateTrackerCommandHandler(ITrackerRepository repo, IMediator mediator)
         {
             _repo = repo;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -26,7 +28,13 @@ namespace Application.Features.Tracking.Commands
         /// <returns>Empty value if return is successful.</returns>
         public async Task<Unit> Handle(CreateTrackerCommand request, CancellationToken cancellationToken)
         {
-            var tracker = new Tracker
+            // Sometimes the tracker can bug and try to register twice.  In this case we want to switch to an update command.
+            var tracker = await _repo.GetAsync(request.HardwareId);
+            if(tracker != null)
+            {
+                return await _mediator.Send(new UpdateTrackerCommand(request.HardwareId, request.Longitude, request.Latitude));
+            }
+            tracker = new Tracker
             {
                 Location = new Location(request.Longitude, request.Latitude),
                 HardwareId = request.HardwareId,

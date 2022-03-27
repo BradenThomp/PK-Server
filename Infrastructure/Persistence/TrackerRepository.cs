@@ -61,7 +61,7 @@ namespace Infrastructure.Persistence
                     $"WHERE t.HardwareId = @HardwareId", (tracker, location) => {
                         tracker.Location = location;
                         return tracker;
-                    }, new { HardwareId=id }, splitOn: "LocationId")).Single();
+                    }, new { HardwareId=id }, splitOn: "LocationId")).SingleOrDefault();
             }
         }
 
