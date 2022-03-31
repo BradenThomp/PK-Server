@@ -49,14 +49,14 @@ namespace Domain.Models
         public Location(){}
 
         /// <summary>
-        /// Returns true if this is within 250 meters of the other location.
+        /// Returns true if this is within one kilometer of the other location.
         /// </summary>
         /// <param name="location">The other location.</param>
-        /// <returns>True if the distance is within 250 meters.</returns>
-        public bool Within250Meters(Location location)
+        /// <returns>True if the distance is within one kilometer.</returns>
+        public bool WithinOneKilometer(Location location)
         {
             var distance = HaversineDistance(location, this);
-            return distance < 0.25;
+            return distance < 1.0;
         }
 
         /// <summary>

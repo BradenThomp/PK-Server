@@ -46,7 +46,7 @@ namespace Application.Features.Tracking.Commands
                 if (!s.ReachedDestination)
                 {
                     var r = await _rentalRepo.GetAsync(s.RentalId);
-                    if (!r.Destination.Cooridinates.IsPlaceHolder() && t.Location.Within250Meters(r.Destination.Cooridinates) && !s.ReachedDestination)
+                    if (!r.Destination.Cooridinates.IsPlaceHolder() && t.Location.WithinOneKilometer(r.Destination.Cooridinates) && !s.ReachedDestination)
                     {
                         s.ReachedDestination = true;
                         await _speakerRepo.UpdateAsync(s);
