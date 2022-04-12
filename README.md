@@ -22,5 +22,5 @@ To use the application, the seed found at Infrastructure\Persistence\Seed\seed.s
 
 ## Usage
 From the root folder run the following:
-dotnet run --project Web-api
+`dotnet run --project Web-api`
 The swagger api should be running on port 5001 if https is used and port 5000 if unused.
